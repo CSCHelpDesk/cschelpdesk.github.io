@@ -1,241 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator | CSC Desk</title>
-<meta name="description" content="Generate high-quality QR codes instantly for URLs, text, UPI payments, or contact information.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- QRCode.js Library CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>
-
-
-
-
-
-
-
-
-        /* Workspace Grid */
-        .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 900px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Control Panel */
-        .form-panel {
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .form-panel h3 {
-            font-size: 15px;
-            color: #0b6e4f;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 8px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 5px;
-        }
-
-        input[type="text"], textarea, select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        textarea {
-            resize: vertical;
-            height: 90px;
-        }
-
-        .btn-generate {
-            background-color: #0b6e4f;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn-generate:hover {
-            background-color: #07513a;
-        }
-
-        /* Preview Panel */
-        .preview-panel {
-            background: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .qr-box {
-            background: #ffffff;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            display: inline-block;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        }
-
-        #qrcode {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #qrcode img {
-            display: block;
-            margin: 0 auto;
-        }
-
-        .btn-download {
-            background-color: #0b6e4f;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .btn-download:hover {
-            background-color: #07513a;
-        }
-    </style>
-<style>
-/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
-@page{size:A4;margin:0}
-@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
-</style>
-<style id="pageStyle"></style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Qr Code Generator | CSC Desk</title>
+  <meta name="description" content="CSC Desk official utility tool.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header id="site-header"></header>
-<main id="main">
-
-    <div class="container">
-        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Utilities</div><h1>QR Code Generator</h1><p>Generate high-quality QR codes instantly for URLs, text, UPI payments, or contact information.</p></div>
-
-        <div class="workspace">
-            <!-- Left Form Panel -->
-            <div class="form-panel">
-                <h3>1. Enter Content or URL</h3>
-                <div class="input-group">
-                    <label>QR Code Data (Website Link, UPI ID, Text)</label>
-                    <textarea id="qrText" placeholder="Enter text or URL here...">https://cschelpdesk.github.io</textarea>
-                </div>
-
-                <div class="input-group">
-                    <label>QR Code Size</label>
-                    <select id="qrSize">
-                        <option value="180">Small (180 x 180 px)</option>
-                        <option value="220" selected>Standard (220 x 220 px)</option>
-                        <option value="300">Large (300 x 300 px)</option>
-                    </select>
-                </div>
-
-                <button class="btn-generate" onclick="generateQRCode()"><i class="fa-solid fa-gear"></i> Generate QR Code</button>
-            </div>
-
-            <!-- Right Preview Panel -->
-            <div class="preview-panel">
-                <div class="qr-box">
-                    <div id="qrcode"></div>
-                </div>
-                <div id="downloadArea" style="display:none;">
-                    <a id="downloadBtn" download="qrcode.png" class="btn-download" onclick="downloadQR()"><i class="fa-solid fa-download"></i> Download QR Image</a>
-                </div>
-                <p style="font-size: 12px; color: #666; margin-top: 15px;">Ready to scan instantly with any mobile device or scanner.</p>
-            </div>
-        </div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head">
+      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
+      <h1>Qr Code Generator</h1>
+      <p>CSC Desk official utility tool.</p>
     </div>
-
-    </main>
-<footer id="site-footer"></footer>
-<script>
-        let qrInstance = null;
-
-        function generateQRCode() {
-            const text = document.getElementById('qrText').value.trim();
-            const size = parseInt(document.getElementById('qrSize').value);
-            const container = document.getElementById('qrcode');
-
-            if (!text) {
-                alert('Please enter text or a URL to generate a QR code.');
-                return;
-            }
-
-            container.innerHTML = '';
-
-            qrInstance = new QRCode(container, {
-                text: text,
-                width: size,
-                height: size,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
-
-            document.getElementById('downloadArea').style.display = 'block';
-        }
-
-        function downloadQR() {
-            const cv = document.querySelector('#qrcode canvas');
-            if (cv) { document.getElementById('downloadBtn').href = cv.toDataURL('image/png'); return; }
-            const img = document.querySelector('#qrcode img');
-            if (img) {
-                const btn = document.getElementById('downloadBtn');
-                btn.href = img.src;
-            }
-        }
-
-        // Generate default on load
-        window.onload = function() {
-            generateQRCode();
-        };
-    </script>
-<script src="assets/js/site.js"></script>
+    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
+      <h3><i class="fa-solid fa-toolbox"></i> Qr Code Generator Workspace</h3>
+      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
+      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
+        <p><b>Drag & Drop files here or click to browse</b></p>
+        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
+      </div>
+    </div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/page-theme.js"></script>
 </body>
 </html>

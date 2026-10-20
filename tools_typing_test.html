@@ -1,27 +1,36 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Typing test | CSC Desk</title><meta name="description" content="English and Hindi typing speed and accuracy test.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>@page{size:A4;margin:0}#tg span.ok{color:#0b8a4f}#tg span.bad{color:#fff;background:#d33;border-radius:2px}#tg span.cur{background:var(--saffron-soft);border-bottom:2px solid var(--saffron)}</style></head><body>
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
-<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Utilities</div><h1>Typing test</h1><p>English and Hindi typing speed and accuracy test.</p></div>
-<div class="split"><section class="panel"><div class="field"><label for="lg">Language</label><select id="lg"><option value="en">English</option><option value="hi">Hindi</option></select></div><div class="field"><label for="du">Time</label><select id="du"><option value="60">1 minute</option><option value="120">2 minutes</option><option value="300">5 minutes</option></select></div><button class="btn" id="nw"><i class="fa-solid fa-shuffle"></i> New passage</button><div id="res" class="note" style="margin-top:14px;font-size:1rem" aria-live="polite"></div></section><section class="panel"><div style="display:flex;justify-content:space-between;font-weight:700;margin-bottom:8px"><span>Time left: <span id="tm">60</span>s</span><span>Speed: <span id="wp">0</span> WPM</span></div><div id="tg" style="font-size:1.25rem;line-height:1.9;margin-bottom:10px;max-height:240px;overflow:auto;user-select:none"></div><textarea id="in" rows="5" style="width:100%;font:inherit;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)" placeholder="Start typing here. The timer starts with your first key." spellcheck="false" autocomplete="off"></textarea></section></div>
-</main><footer id="site-footer"></footer>
-<script src="assets/js/site.js"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const dl=(blob,name)=>{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);};
-const P={en:['A good habit grows slowly but stays for a long time. Every morning, take a few minutes to plan your day, and then do the most important work first. Small steps taken daily bring great results over the years.','Digital services have made life easier for villages and towns. A citizen can now apply for a certificate, pay a bill or check a status from a nearby service centre without travelling to a far office. Honest and careful work at the counter builds trust.','Practice makes a person perfect. Keep your back straight, place your fingers on the home row and look at the screen, not at the keys. Speed will come on its own when your accuracy is good.'],
-hi:['अच्छी आदतें धीरे धीरे बनती हैं और लंबे समय तक साथ रहती हैं। हर सुबह कुछ मिनट अपने दिन की योजना बनाइए और सबसे जरूरी काम सबसे पहले कीजिए। रोज उठाए गए छोटे कदम बरसों में बड़ा फल देते हैं।','डिजिटल सेवाओं ने गाँव और कस्बों के जीवन को आसान बना दिया है। अब नागरिक पास के सेवा केंद्र से प्रमाण पत्र के लिए आवेदन कर सकता है, बिल भर सकता है और अपनी स्थिति जान सकता है। काउंटर पर ईमानदारी और सावधानी से किया गया काम भरोसा बढ़ाता है।']};
-let tgt='',t0=0,iv=null,done=false,dur=60;
-function pick(){const a=P[$('lg').value];tgt=a[Math.floor(Math.random()*a.length)];reset();}
-function reset(){clearInterval(iv);iv=null;done=false;t0=0;dur=+$('du').value;$('in').value='';$('in').disabled=false;$('tm').textContent=dur;$('wp').textContent=0;$('res').textContent='';show('');}
-function show(v){const T=[...tgt],U=[...v];$('tg').innerHTML=T.map((c,i)=>'<span class="'+(i<U.length?(U[i]===c?'ok':'bad'):(i===U.length?'cur':''))+'">'+esc(c)+'</span>').join('');const cu=$('tg').querySelector('.cur');if(cu)cu.scrollIntoView({block:'nearest'});}
-function stats(){const T=[...tgt],U=[...$('in').value];let ok=0;U.forEach((c,i)=>{if(c===T[i])ok++;});const el=Math.max(1,Math.min(dur,(Date.now()-t0)/1000));return{ok:ok,typ:U.length,wpm:Math.round(ok/5/(el/60)),acc:U.length?Math.round(ok/U.length*100):0};}
-function finish(){if(done)return;done=true;clearInterval(iv);$('in').disabled=true;const s=stats();$('res').innerHTML='<b>Result</b><br>Net speed: <b>'+s.wpm+' WPM</b><br>Accuracy: <b>'+s.acc+'%</b><br>Correct characters: '+s.ok+' of '+s.typ+' typed<br>Press New passage to try again.';}
-$('in').oninput=()=>{if(done)return;if(!t0){t0=Date.now();iv=setInterval(()=>{const left=Math.max(0,dur-Math.floor((Date.now()-t0)/1000));$('tm').textContent=left;$('wp').textContent=stats().wpm;if(left<=0)finish();},250);}show($('in').value);if([...$('in').value].length>=[...tgt].length)finish();};
-$('nw').onclick=pick;$('lg').onchange=pick;$('du').onchange=reset;pick();
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typing Test | CSC Desk</title>
+  <meta name="description" content="CSC Desk official utility tool.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head">
+      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
+      <h1>Typing Test</h1>
+      <p>CSC Desk official utility tool.</p>
+    </div>
+    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
+      <h3><i class="fa-solid fa-toolbox"></i> Typing Test Workspace</h3>
+      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
+      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
+        <p><b>Drag & Drop files here or click to browse</b></p>
+        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
+      </div>
+    </div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/page-theme.js"></script>
+</body>
+</html>

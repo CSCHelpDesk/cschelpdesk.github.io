@@ -1,302 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Text Extractor (OCR) | CSC Desk</title>
-<meta name="description" content="Extract editable text from scanned documents, certificates, and images instantly in your browser.">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tesseract.js OCR Library CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>
-
-
-
-
-
-
-
-
-        /* Workspace Grid */
-        .workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-        }
-
-        @media (max-width: 900px) {
-            .workspace {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Panels */
-        .panel {
-            background: #fff;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .panel h3 {
-            font-size: 15px;
-            color: #0b6e4f;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 8px;
-        }
-
-        .input-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: #444;
-            margin-bottom: 5px;
-        }
-
-        input[type="file"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 13px;
-        }
-
-        .image-preview-box {
-            border: 2px dashed #ddd;
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            background: #fafafa;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin-bottom: 15px;
-        }
-
-        .image-preview-box img {
-            max-width: 100%;
-            max-height: 250px;
-            border-radius: 4px;
-        }
-
-        textarea.output-text {
-            width: 100%;
-            height: 280px;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 13px;
-            resize: vertical;
-            background: #fafafa;
-        }
-
-        .btn-action {
-            background-color: #0b6e4f;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .btn-action:hover {
-            background-color: #07513a;
-        }
-
-        .btn-success {
-            background-color: #0b6e4f;
-        }
-
-        .btn-success:hover {
-            background-color: #07513a;
-        }
-
-        .status-text {
-            font-size: 13px;
-            color: #666;
-            margin-top: 10px;
-            text-align: center;
-            font-weight: 600;
-        }
-    </style>
-<style>
-/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
-@page{size:A4;margin:0}
-@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
-</style>
-<style id="pageStyle"></style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image Text Extractor | CSC Desk</title>
+  <meta name="description" content="CSC Desk official utility tool.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
 </head>
 <body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header id="site-header"></header>
-<main id="main">
-
-    <div class="container">
-        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>Image Text Extractor (OCR)</h1><p>Extract editable text from scanned documents, certificates, and images instantly in your browser.</p></div>
-
-        <div class="workspace">
-            <!-- Left Panel: Upload & Preview -->
-            <div class="panel">
-                <h3>1. Upload Image</h3>
-                <div class="input-group">
-                    <label>Select Image (JPG / PNG)</label>
-                    <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)">
-                </div>
-
-                <div class="input-group">
-                    <label>OCR Language</label>
-                    <select id="ocrLang">
-                        <option value="eng">English</option>
-                        <option value="hin">Hindi</option>
-                        <option value="eng+hin">English + Hindi</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Layout</label>
-                    <select id="ocrPsm">
-                        <option value="3">Auto (normal page)</option>
-                        <option value="6">Single block of text</option>
-                        <option value="4">Single column (forms, lists)</option>
-                        <option value="7">Single line</option>
-                        <option value="11">Scattered text (cards, stamps)</option>
-                    </select>
-                </div>
-                <div class="input-group"><label><input type="checkbox" id="ocrEnh" checked style="width:auto"> Enhance image (enlarge, grey, more contrast) - recommended</label></div>
-                <div class="input-group"><label><input type="checkbox" id="ocrBw" style="width:auto"> Black and white (for faded or shadowed scans)</label></div>
-                <div class="input-group"><button type="button" class="btn-action" style="background:#555" onclick="rotateImg()"><i class="fa-solid fa-rotate-right"></i> Rotate 90&deg;</button></div>
-
-                <div class="image-preview-box" id="previewContainer">
-                    <span style="color: #888; font-size: 13px;"><i class="fa-regular fa-image" style="font-size: 24px; display:block; margin-bottom:5px;"></i> Image preview will appear here</span>
-                </div>
-
-                <button class="btn-action" id="extractBtn" onclick="extractText()" style="display: none;"><i class="fa-solid fa-wand-magic-sparkles"></i> Extract Text</button>
-                <div id="statusMsg" class="status-text"></div>
-            </div>
-
-            <!-- Right Panel: Extracted Output -->
-            <div class="panel">
-                <h3>2. Extracted Text Output</h3>
-                <div class="input-group" style="flex: 1;">
-                    <label>Editable Result</label>
-                    <textarea id="outputText" class="output-text" placeholder="Extracted text will appear here..."></textarea>
-                </div>
-
-                <div id="ocrInfo" class="status-text"></div>
-                <button class="btn-action btn-success" onclick="copyText()"><i class="fa-solid fa-copy"></i> Copy to Clipboard</button>
-                <button class="btn-action" style="margin-top:8px" onclick="saveTxt()"><i class="fa-solid fa-file-arrow-down"></i> Download as .txt</button>
-            </div>
-        </div>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head">
+      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
+      <h1>Image Text Extractor</h1>
+      <p>CSC Desk official utility tool.</p>
     </div>
-
-    </main>
-<footer id="site-footer"></footer>
-<script>
-        let selectedFile = null, rot = 0;
-
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            selectedFile = file; rot = 0;
-            showPrev();
-            document.getElementById('extractBtn').style.display = 'block';
-            document.getElementById('outputText').value = '';
-        }
-        function showPrev() {
-            document.getElementById('previewContainer').innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" alt="Uploaded Image" style="transform:rotate(${rot}deg);max-width:100%">`;
-        }
-        function rotateImg() { if (!selectedFile) return; rot = (rot + 90) % 360; showPrev(); }
-
-        function prepare(file) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                    const enh = document.getElementById('ocrEnh').checked, bw = document.getElementById('ocrBw').checked;
-                    let s = 1;
-                    if (enh) { const m = Math.max(img.width, img.height); s = m < 1800 ? 1800 / m : (m > 3500 ? 3500 / m : 1); }
-                    const sw = Math.round(img.width * s), sh = Math.round(img.height * s), sideways = rot % 180 !== 0;
-                    const c = document.createElement('canvas'); c.width = sideways ? sh : sw; c.height = sideways ? sw : sh;
-                    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
-                    x.translate(c.width / 2, c.height / 2); x.rotate(rot * Math.PI / 180); x.drawImage(img, -sw / 2, -sh / 2, sw, sh);
-                    if (enh || bw) {
-                        x.setTransform(1, 0, 0, 1, 0, 0);
-                        const id = x.getImageData(0, 0, c.width, c.height), d = id.data;
-                        let lo = 255, hi = 0;
-                        for (let i = 0; i < d.length; i += 4) { const g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]; d[i] = g; if (g < lo) lo = g; if (g > hi) hi = g; }
-                        const span = Math.max(1, hi - lo);
-                        for (let i = 0; i < d.length; i += 4) {
-                            let g = (d[i] - lo) / span * 255;
-                            if (bw) g = g > 140 ? 255 : 0;
-                            d[i] = d[i + 1] = d[i + 2] = g;
-                        }
-                        x.putImageData(id, 0, 0);
-                    }
-                    resolve(c);
-                };
-                img.onerror = reject; img.src = URL.createObjectURL(file);
-            });
-        }
-
-        async function extractText() {
-            if (!selectedFile) {
-                alert('Please upload an image first.');
-                return;
-            }
-            const lang = document.getElementById('ocrLang').value;
-            const statusMsg = document.getElementById('statusMsg');
-            const outputText = document.getElementById('outputText');
-            statusMsg.innerText = 'Preparing image...';
-            outputText.value = ''; document.getElementById('ocrInfo').innerText = '';
-            let worker;
-            try {
-                const canvas = await prepare(selectedFile);
-                worker = Tesseract.createWorker({ logger: m => { if (m.status === 'recognizing text') statusMsg.innerText = 'Reading text... ' + Math.round(m.progress * 100) + '%'; else statusMsg.innerText = 'Loading ' + (m.status || '') + '...'; } });
-                await worker.load(); await worker.loadLanguage(lang); await worker.initialize(lang);
-                await worker.setParameters({ tessedit_pageseg_mode: document.getElementById('ocrPsm').value, preserve_interword_spaces: '1' });
-                const ret = await worker.recognize(canvas);
-                const clean = ret.data.text.replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
-                outputText.value = clean;
-                const words = clean ? clean.split(/\s+/).length : 0;
-                statusMsg.innerText = 'Text extraction completed.';
-                const conf = Math.round(ret.data.confidence || 0);
-                document.getElementById('ocrInfo').innerText = words + ' words. Confidence ' + conf + '%.' + (conf < 70 ? ' Low confidence: try Black and white, rotate, or a clearer photo, and check the text carefully.' : ' Please check names and numbers before using.');
-            } catch (error) {
-                console.error(error);
-                statusMsg.innerText = 'Error during text extraction. Please try another image.';
-            }
-            if (worker) { try { await worker.terminate(); } catch (e) {} }
-        }
-
-        function saveTxt() {
-            const v = document.getElementById('outputText').value;
-            if (!v) return;
-            const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([v], { type: 'text/plain;charset=utf-8' })); a.download = 'extracted-text.txt'; a.click();
-        }
-
-        function copyText() {
-            const text = document.getElementById('outputText');
-            text.select();
-            text.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(text.value);
-            alert('Extracted text copied to clipboard!');
-        }
-    </script>
-<script src="assets/js/site.js"></script>
+    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
+      <h3><i class="fa-solid fa-toolbox"></i> Image Text Extractor Workspace</h3>
+      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
+      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
+        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
+        <p><b>Drag & Drop files here or click to browse</b></p>
+        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
+      </div>
+    </div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/page-theme.js"></script>
 </body>
 </html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan EMI Calculator | CSC Desk</title>
+<meta name="description" content="Calculate your monthly loan repayments, interest breakdowns, and total amounts instantly.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        .calc-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .calc-card h3 {
+            font-size: 16px;
+            color: #0b6e4f;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-action {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            background-color: #07513a;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            background: #e4f1ea;
+            border: 1px solid #b9d8c9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-box h4 {
+            color: #0b6e4f;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .result-item {
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            border-top: 3px solid #0b6e4f;
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .result-item label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 0;
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Calculators</div><h1>Loan EMI Calculator</h1><p>Calculate your monthly loan repayments, interest breakdowns, and total amounts instantly.</p></div>
+
+        <div class="calc-card">
+            <h3>Enter Loan Details</h3>
+            <div class="input-group">
+                <label>Loan Amount (₹)</label>
+                <input type="number" id="loanAmount" placeholder="e.g., 500000" value="500000">
+            </div>
+
+            <div class="input-group">
+                <label>Interest Rate (% P.A.)</label>
+                <input type="number" id="interestRate" step="0.1" placeholder="e.g., 10.5" value="10.5">
+            </div>
+
+            <div class="input-group">
+                <label>Loan Tenure</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="number" id="loanTerm" placeholder="e.g., 5" value="5" style="flex: 2;">
+                    <select id="termType" style="flex: 1;">
+                        <option value="years">Years</option>
+                        <option value="months">Months</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-action" onclick="calculateEMI()"><i class="fa-solid fa-calculator"></i> Calculate EMI</button>
+
+            <div id="resultArea" class="result-box">
+                <h4>Loan Summary Breakdown</h4>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span id="resEmi">₹ 0.00</span>
+                        <label>Monthly EMI</label>
+                    </div>
+                    <div class="result-item">
+                        <span id="resInterest">₹ 0.00</span>
+                        <label>Total Interest</label>
+                    </div>
+                    <div class="result-item">
+                        <span id="resTotal">₹ 0.00</span>
+                        <label>Total Payment</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        function calculateEMI() {
+            const principal = parseFloat(document.getElementById('loanAmount').value);
+            const annualRate = parseFloat(document.getElementById('interestRate').value);
+            let term = parseFloat(document.getElementById('loanTerm').value);
+            const termType = document.getElementById('termType').value;
+
+            if (isNaN(principal) || isNaN(annualRate) || isNaN(term) || principal <= 0 || annualRate < 0 || term <= 0) {
+                alert('Please enter valid positive numbers for all loan fields.');
+                return;
+            }
+
+            // Convert term to months if given in years
+            if (termType === 'years') {
+                term = term * 12;
+            }
+
+            const monthlyRate = (annualRate / 12) / 100;
+
+            let emi = 0;
+            if (monthlyRate === 0) {
+                emi = principal / term;
+            } else {
+                const x = Math.pow(1 + monthlyRate, term);
+                emi = (principal * monthlyRate * x) / (x - 1);
+            }
+
+            const totalPayment = emi * term;
+            const totalInterest = totalPayment - principal;
+
+            document.getElementById('resEmi').innerText = `₹ ${emi.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('resInterest').innerText = `₹ ${totalInterest.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('resTotal').innerText = `₹ ${totalPayment.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            document.getElementById('resultArea').style.display = 'block';
+        }
+
+        // Run calculation on load with default values
+        calculateEMI();
+    </script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

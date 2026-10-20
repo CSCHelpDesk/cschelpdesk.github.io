@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passport Photo Sheet Generator | CSC Desk</title>
+<meta name="description" content="Upload a photo and instantly generate 8-photo (4x6 photo paper) or 30-photo (A4 sheet) print grids.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .form-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .form-panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 6px;
+            margin-top: 15px;
+        }
+
+        .form-panel h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        input[type="file"], select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .btn-print {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-print:hover {
+            background-color: #07513a;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        /* 4x6 Sheet (101.6mm x 152.4mm) */
+        .sheet-4x6 {
+            width: 152.4mm;
+            height: 101.6mm;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 3mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5mm;
+            align-content: center;
+            justify-items: center;
+        }
+
+        /* A4 Sheet (210mm x 297mm) */
+        .sheet-a4 {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 10mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4mm;
+            align-content: start;
+            justify-items: center;
+        }
+
+        /* Standard Indian Passport Photo Size: 3.5cm x 4.5cm */
+        .passport-photo {
+            width: 35mm;
+            height: 45mm;
+            border: 1px dashed #999;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #photoSheet, #photoSheet * {
+                visibility: visible;
+            }
+            #photoSheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 3mm;
+            }
+            .form-panel, .header, .back-link, .btn-print {
+                display: none;
+            }
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Photo & ID print</div><h1>Passport Photo Sheet Generator</h1><p>Upload a photo and instantly generate 8-photo (4x6 photo paper) or 30-photo (A4 sheet) print grids.</p></div>
+
+        <div class="workspace">
+            <!-- Left Form Panel -->
+            <div class="form-panel">
+                <h3>1. Upload Photo</h3>
+                <div class="input-group">
+                    <label>Candidate Photo</label>
+                    <input type="file" id="photoInput" accept="image/*" onchange="loadPhoto(event)">
+                </div>
+
+                <h3>2. Paper & Grid Settings</h3>
+                <div class="input-group">
+                    <label>Paper Size</label>
+                    <select id="paperSize" onchange="updateSheetLayout()">
+                        <option value="4x6">4 x 6 Inch Photo Paper, landscape (8 Photos)</option>
+                        <option value="a4">A4 Sheet (30 Photos)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Border Style</label>
+                    <select id="borderStyle" onchange="updateBorders()">
+                        <option value="dashed">Dashed Cutting Lines</option>
+                        <option value="solid">Thin Solid Border</option>
+                        <option value="none">No Border</option>
+                    </select>
+                </div>
+
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Photo Sheet</button>
+            </div>
+
+            <!-- Right Preview Panel -->
+            <div class="preview-panel">
+                <div id="photoSheet" class="sheet-4x6">
+                    <!-- Photo grid rendered dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        let currentPhotoSrc = 'data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27140%27%20height%3D%27180%27%20viewBox%3D%270%200%20140%20180%27%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27%23eef2f0%27%2F%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20fill%3D%27%2358695f%27%20font-family%3D%27Arial%27%20font-size%3D%2712%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%3EUpload%20Photo%3C%2Ftext%3E%3C%2Fsvg%3E';
+
+        function loadPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentPhotoSrc = e.target.result;
+                renderPhotos();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateSheetLayout() {
+            const size = document.getElementById('paperSize').value;
+            const sheet = document.getElementById('photoSheet');
+
+            if (size === '4x6') {
+                sheet.className = 'sheet-4x6';
+            } else {
+                sheet.className = 'sheet-a4';
+            }
+            renderPhotos();
+        }
+
+        function updateBorders() {
+            const borderStyle = document.getElementById('borderStyle').value;
+            const photos = document.querySelectorAll('.passport-photo');
+
+            photos.forEach(img => {
+                if (borderStyle === 'dashed') {
+                    img.style.border = '1px dashed #999';
+                } else if (borderStyle === 'solid') {
+                    img.style.border = '1px solid #000';
+                } else {
+                    img.style.border = 'none';
+                }
+            });
+        }
+
+        function renderPhotos() {
+            const size = document.getElementById('paperSize').value;
+            const sheet = document.getElementById('photoSheet');
+            const count = size === '4x6' ? 8 : 30;
+            document.getElementById('pageStyle').textContent = size === '4x6' ? '@page{size:6in 4in;margin:0}' : '@page{size:A4;margin:0}';
+
+            sheet.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                const img = document.createElement('img');
+                img.src = currentPhotoSrc;
+                img.className = 'passport-photo';
+                sheet.appendChild(img);
+            }
+            updateBorders();
+        }
+
+        // Initialize grid on load
+        renderPhotos();
+    </script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Merger & Image to PDF | CSC Desk</title>
+<meta name="description" content="Upload multiple images (JPEGs, PNGs) and combine them instantly into a single formatted PDF document.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- jsPDF Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .form-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .form-panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px dashed #0b6e4f;
+            border-radius: 6px;
+            background: #e4f1ea;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-action {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            background-color: #07513a;
+        }
+
+        /* Preview Panel */
+        .preview-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 400px;
+        }
+
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .thumb-card {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px;
+            background: #fafafa;
+            text-align: center;
+            position: relative;
+        }
+
+        .thumb-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .thumb-card span {
+            font-size: 11px;
+            color: #555;
+            display: block;
+            word-break: break-all;
+        }
+
+        .placeholder-text {
+            color: #888;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 80px;
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>PDF Merger & Image to PDF Converter</h1><p>Upload multiple images (JPEGs, PNGs) and combine them instantly into a single formatted PDF document.</p></div>
+
+        <div class="workspace">
+            <!-- Left Form Panel -->
+            <div class="form-panel">
+                <h3>1. Select Images to Merge</h3>
+                <div class="input-group">
+                    <label>Choose Multiple Image Files</label>
+                    <input type="file" id="imageInput" accept="image/*" multiple onchange="handleFiles(event)">
+                </div>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                    <i class="fa-solid fa-info-circle"></i> You can select multiple files at once. They will be compiled into PDF pages in the order selected.
+                </p>
+
+                <button class="btn-action" id="convertBtn" onclick="generatePDF()" style="display: none;"><i class="fa-solid fa-file-arrow-down"></i> Convert & Download PDF</button>
+            </div>
+
+            <!-- Right Preview Panel -->
+            <div class="preview-panel" id="previewPanel">
+                <div id="placeholder" class="placeholder-text">
+                    <i class="fa-regular fa-images" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i><br>
+                    No images selected yet. Upload images to preview.
+                </div>
+                <div id="thumbnailGrid" class="thumbnail-grid" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        let uploadedFiles = [];
+
+        function handleFiles(event) {
+            const files = Array.from(event.target.files);
+            if (files.length === 0) return;
+
+            uploadedFiles = files;
+            const grid = document.getElementById('thumbnailGrid');
+            const placeholder = document.getElementById('placeholder');
+            const convertBtn = document.getElementById('convertBtn');
+
+            grid.innerHTML = '';
+            grid.style.display = 'grid';
+            placeholder.style.display = 'none';
+            convertBtn.style.display = 'block';
+
+            uploadedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const card = document.createElement('div');
+                    card.className = 'thumb-card';
+                    card.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <span>Page ${index + 1}: ${esc(file.name)}</span>
+                    `;
+                    grid.appendChild(card);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function generatePDF() {
+            if (uploadedFiles.length === 0) {
+                alert('Please select at least one image first.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+
+            for (let i = 0; i < uploadedFiles.length; i++) {
+                const file = uploadedFiles[i];
+                const dataUrl = await readFileAsDataURL(file);
+
+                if (i > 0) {
+                    pdf.addPage();
+                }
+
+                // Calculate proportions to fit A4 page neatly
+                const imgProps = await getImageDimensions(dataUrl);
+                const imgWidth = pageWidth - 20; // 10mm margins
+                const imgHeight = (imgProps.height * imgWidth) / imgProps.width;
+
+                const finalHeight = imgHeight > (pageHeight - 20) ? (pageHeight - 20) : imgHeight;
+                const finalWidth = imgHeight > (pageHeight - 20) ? (imgProps.width * (pageHeight - 20)) / imgProps.height : imgWidth;
+
+                const x = (pageWidth - finalWidth) / 2;
+                const y = (pageHeight - finalHeight) / 2;
+
+                pdf.addImage(await toJpeg(dataUrl, imgProps), 'JPEG', x, y, finalWidth, finalHeight);
+            }
+
+            pdf.save('merged_document.pdf');
+        }
+
+        function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+        function toJpeg(url, d) {
+            return new Promise((resolve) => {
+                const i = new Image();
+                i.onload = () => {
+                    const k = Math.min(1, 2000 / Math.max(d.width, d.height));
+                    const c = document.createElement('canvas');
+                    c.width = Math.round(d.width * k); c.height = Math.round(d.height * k);
+                    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+                    x.drawImage(i, 0, 0, c.width, c.height);
+                    resolve(c.toDataURL('image/jpeg', 0.92));
+                };
+                i.src = url;
+            });
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function getImageDimensions(url) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve({ width: img.width, height: img.height });
+                img.src = url;
+            });
+        }
+    </script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

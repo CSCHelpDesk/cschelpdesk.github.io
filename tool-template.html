@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GST Calculator | CSC Desk</title>
+  <meta name="description" content="Add or remove GST from any price.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Calculators</div>
+      <h1>GST calculator</h1><p>Add GST to a price, or take it out of a GST-inclusive price.</p>
+    </div>
+    <!-- COPY THIS FILE for each new tool. Replace only what is inside .panel. -->
+    <section class="panel">
+      <div class="field"><label for="amt">Amount (Rs.)</label><input id="amt" type="number" min="0" inputmode="decimal" value="1000"></div>
+      <div class="field"><label for="rate">GST rate</label>
+        <select id="rate"><option>5</option><option>12</option><option selected>18</option><option>28</option></select></div>
+      <div class="field"><label for="mode">What is the amount?</label>
+        <select id="mode"><option value="add">Price without GST (add GST)</option><option value="remove">Price with GST (remove GST)</option></select></div>
+      <button class="btn" id="go">Calculate</button>
+      <p class="result" id="out" aria-live="polite" hidden></p>
+    </section>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script>
+    document.getElementById('go').addEventListener('click', () => {
+      const a = parseFloat(amt.value), r = parseFloat(rate.value), out = document.getElementById('out');
+      if (!(a >= 0)) { out.hidden = false; out.textContent = 'Enter a valid amount.'; return; }
+      const base = mode.value === 'add' ? a : a / (1 + r / 100), gst = base * r / 100;
+      const f = n => 'Rs. ' + n.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      out.hidden = false; out.textContent = `Base ${f(base)}  |  GST ${f(gst)}  |  Total ${f(base + gst)}`;
+    });
+  </script>
+</body>
+</html>

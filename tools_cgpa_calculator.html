@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA to Percentage Calculator | CSC Desk</title>
+<meta name="description" content="Convert your cumulative grade point average (CGPA) into accurate percentage scores instantly.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        .calc-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .calc-card h3 {
+            font-size: 16px;
+            color: #0b6e4f;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-action {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            background-color: #07513a;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            background: #e4f1ea;
+            border: 1px solid #b9d8c9;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .result-box h4 {
+            color: #0b6e4f;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .result-item {
+            background: #fff;
+            padding: 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+
+        .result-item span {
+            display: block;
+            font-size: 20px;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .result-item label {
+            font-size: 11px;
+            color: #666;
+            margin-top: 3px;
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Calculators</div><h1>CGPA & Percentage Calculator</h1><p>Convert your cumulative grade point average (CGPA) into accurate percentage scores instantly.</p></div>
+
+        <div class="calc-card">
+            <h3>Enter Your CGPA Details</h3>
+            <div class="input-group">
+                <label>Overall CGPA (e.g., 8.25)</label>
+                <input type="number" id="cgpaInput" step="0.01" max="10" placeholder="Enter CGPA out of 10">
+            </div>
+
+            <div class="input-group">
+                <label>University Formula (Multiplier)</label>
+                <select id="formulaMultiplier" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:14px;">
+                    <option value="9.5">Multiply by 9.5 (CBSE formula)</option>
+                    <option value="10">Multiply by 10 (used by some universities)</option>
+                </select>
+            </div>
+
+            <p style="font-size:12px;color:#5d6b7a;margin-top:6px">Universities and boards use different formulas. Check your own rule before using the result on a form.</p>
+            <button class="btn-action" onclick="calculatePercentage()"><i class="fa-solid fa-calculator"></i> Convert to Percentage</button>
+
+            <div id="resultArea" class="result-box">
+                <h4>Calculation Result</h4>
+                <div class="result-grid">
+                    <div class="result-item">
+                        <span id="resCgpa">0.00</span>
+                        <label>Entered CGPA</label>
+                    </div>
+                    <div class="result-item">
+                        <span id="resPercentage">0.00%</span>
+                        <label>Equivalent Percentage</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        function calculatePercentage() {
+            const cgpa = parseFloat(document.getElementById('cgpaInput').value);
+            const multiplier = parseFloat(document.getElementById('formulaMultiplier').value);
+
+            if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+                alert('Please enter a valid CGPA between 0 and 10.');
+                return;
+            }
+
+            const percentage = cgpa * multiplier;
+
+            document.getElementById('resCgpa').innerText = cgpa.toFixed(2);
+            document.getElementById('resPercentage').innerText = percentage.toFixed(2) + '%';
+            document.getElementById('resultArea').style.display = 'block';
+        }
+    </script>
+<script src="assets/js/site.js"></script>
+</body>
+</html>

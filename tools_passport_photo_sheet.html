@@ -194,9 +194,18 @@
                     <label>Paper Size</label>
                     <select id="paperSize" onchange="updateSheetLayout()">
                         <option value="4x6">4 x 6 Inch Photo Paper, landscape (8 Photos)</option>
-                        <option value="a4">A4 Sheet (30 Photos)</option>
+                        <option value="a4">A4 Sheet</option>
                     </select>
                 </div>
+                <div class="input-group" id="countWrap">
+                    <label>Number of photos on A4</label>
+                    <select id="photoCount" onchange="renderPhotos()">
+                        <option value="5">5 photos</option><option value="10">10 photos</option><option value="15">15 photos</option>
+                        <option value="20">20 photos</option><option value="25">25 photos</option><option value="30" selected>30 photos (full A4)</option>
+                    </select>
+                </div>
+                <h3>3. Brightness and contrast</h3>
+                <div id="adjMount"></div>
                 <div class="input-group">
                     <label>Border Style</label>
                     <select id="borderStyle" onchange="updateBorders()">
@@ -265,7 +274,8 @@
         function renderPhotos() {
             const size = document.getElementById('paperSize').value;
             const sheet = document.getElementById('photoSheet');
-            const count = size === '4x6' ? 8 : 30;
+            const count = size === '4x6' ? 8 : +document.getElementById('photoCount').value;
+            document.getElementById('countWrap').style.display = size === '4x6' ? 'none' : 'block';
             document.getElementById('pageStyle').textContent = size === '4x6' ? '@page{size:6in 4in;margin:0}' : '@page{size:A4;margin:0}';
 
             sheet.innerHTML = '';
@@ -276,11 +286,23 @@
                 sheet.appendChild(img);
             }
             updateBorders();
+            applyAdj();
         }
+
+        let bri = 100, con = 100;
+        function applyAdj() { document.querySelectorAll('.passport-photo').forEach(i => i.style.filter = 'brightness(' + bri + '%) contrast(' + con + '%)'); }
+        (function () {
+            const m = document.getElementById('adjMount');
+            m.innerHTML = '<div class="adj-box"><div class="adj-row"><label>Brightness</label><input type="range" min="40" max="180" value="100" id="bri"></div><div class="adj-row"><label>Contrast</label><input type="range" min="40" max="200" value="100" id="con"></div><button type="button" class="adj-reset" id="adjR">Reset</button></div>';
+            document.getElementById('bri').oninput = e => { bri = +e.target.value; applyAdj(); };
+            document.getElementById('con').oninput = e => { con = +e.target.value; applyAdj(); };
+            document.getElementById('adjR').onclick = () => { bri = con = 100; document.getElementById('bri').value = document.getElementById('con').value = 100; applyAdj(); };
+        })();
 
         // Initialize grid on load
         renderPhotos();
     </script>
+<script src="assets/js/img-adjust.js"></script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>

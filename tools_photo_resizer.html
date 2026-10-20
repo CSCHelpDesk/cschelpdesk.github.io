@@ -223,6 +223,15 @@
                     <input type="number" id="maxKb" value="50" oninput="resizeImage()">
                 </div>
 
+                <h3>5. Signature clean-up (optional)</h3>
+                <div class="input-group"><label><input type="checkbox" id="sigBg" onchange="resizeImage()" style="width:auto"> Remove background (make paper white)</label></div>
+                <div class="input-group"><label>Background removal strength</label><input type="range" id="sigThr" min="60" max="230" value="170" oninput="resizeImage()" style="width:100%"></div>
+                <div class="input-group"><label>Signature ink colour</label>
+                    <select id="sigCol" onchange="resizeImage()"><option value="orig">Keep original</option><option value="#000000">Black</option><option value="#0b2a8a">Dark blue</option><option value="#1d4ed8">Blue</option><option value="custom">Custom colour...</option></select>
+                    <input type="color" id="sigCustom" value="#000000" oninput="resizeImage()" style="margin-top:6px;width:60px;height:32px">
+                </div>
+                <div class="input-group"><label>Ink darkness</label><input type="range" id="sigDark" min="0" max="100" value="0" oninput="resizeImage()" style="width:100%"></div>
+
                 <button class="btn-action" onclick="resizeImage()"><i class="fa-solid fa-gear"></i> Process Image</button>
             </div>
 
@@ -314,6 +323,24 @@
             const sc = Math.max(width / rawImage.width, height / rawImage.height);
             const dw = rawImage.width * sc, dh = rawImage.height * sc;
             ctx.drawImage(rawImage, (width - dw) / 2, (height - dh) / 2, dw, dh);
+
+            if (document.getElementById('sigBg').checked || document.getElementById('sigCol').value !== 'orig' || +document.getElementById('sigDark').value > 0) {
+                const id = ctx.getImageData(0, 0, width, height), d = id.data;
+                const thr = +document.getElementById('sigThr').value, dark = +document.getElementById('sigDark').value / 100;
+                const cs = document.getElementById('sigCol').value;
+                const hex = cs === 'custom' ? document.getElementById('sigCustom').value : cs;
+                const ink = hex === 'orig' ? null : [parseInt(hex.substr(1, 2), 16), parseInt(hex.substr(3, 2), 16), parseInt(hex.substr(5, 2), 16)];
+                const rm = document.getElementById('sigBg').checked;
+                for (let i = 0; i < d.length; i += 4) {
+                    const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+                    let a = rm ? Math.min(1, Math.max(0, (thr - lum) / 40)) : 1 - lum / 255 * (ink ? 1 : 0);
+                    if (!rm && ink) a = Math.min(1, Math.max(0, (255 - lum) / 120));
+                    if (ink) { a = Math.min(1, a * (1 + dark * 2)); d[i] = 255 - a * (255 - ink[0]); d[i + 1] = 255 - a * (255 - ink[1]); d[i + 2] = 255 - a * (255 - ink[2]); }
+                    else if (rm) { const k = 1 - dark * 0.7; d[i] = 255 - a * (255 - d[i] * k); d[i + 1] = 255 - a * (255 - d[i + 1] * k); d[i + 2] = 255 - a * (255 - d[i + 2] * k); }
+                    else { const k = 1 - dark * 0.7; d[i] *= k; d[i + 1] *= k; d[i + 2] *= k; }
+                }
+                ctx.putImageData(id, 0, 0);
+            }
 
             let quality = 0.92;
             let dataUrl = canvas.toDataURL('image/jpeg', quality);

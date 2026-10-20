@@ -14,8 +14,11 @@
 <div class="split"><section class="panel no-print">
 <div class="field"><label for="shop">Shop name</label><input id="shop" value="Your CSC Centre"></div>
 <div class="field"><label for="sub">Line under the name (phone, address)</label><input id="sub" value="Call: 00000 00000"></div>
-<div class="field"><label for="rows">Services, one per line: Service | Rate</label><textarea id="rows" rows="12" style="font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text)"></textarea></div>
-<p class="note">These are sample rates. Change them to your own before printing. Saved on this computer.</p>
+<div class="field"><label>Services and rates</label><div id="ed"></div>
+<button class="btn" type="button" id="add" style="margin-top:8px"><i class="fa-solid fa-plus"></i> Add service</button>
+<button class="btn" type="button" id="editToggle" style="margin-top:8px;margin-left:6px"><i class="fa-solid fa-pen"></i> Edit rates</button></div>
+<textarea id="rows" hidden></textarea>
+<p class="note">Press Edit rates to change a service or its rate. Changes are saved on this computer.</p>
 <button class="btn" id="pr"><i class="fa-solid fa-print"></i> Print rate list</button></section>
 <section><div class="paper rl" id="sheet"></div></section></div></main><footer id="site-footer"></footer>
 <script src="assets/js/site.js"></script><script>
@@ -28,4 +31,13 @@ if(!$('rows').value)$('rows').value=DEF;
 function draw(){const body=$('rows').value.split('\n').filter(l=>l.trim()).map(l=>{const p=l.split('|');return '<tr><td>'+esc(p[0].trim())+'</td><td>'+esc((p[1]||'').trim())+'</td></tr>';}).join('');
  $('sheet').innerHTML='<h2>'+esc($('shop').value)+'</h2><p>'+esc($('sub').value)+'</p><h3>Service Rate List / सेवा दर सूची</h3><table><tr><th>Service</th><th>Rate</th></tr>'+body+'</table><p class="foot">Rates may change. Please ask at the counter.</p>';
  try{['shop','sub','rows'].forEach(k=>localStorage.setItem('cscdesk_rl_'+k,$(k).value));}catch(e){}}
-['shop','sub','rows'].forEach(k=>$(k).oninput=draw); $('pr').onclick=()=>window.print(); draw();</script></body></html>
+let editing=false;
+function rowsOf(){return $('rows').value.split('\n').filter(l=>l.trim()).map(l=>{const p=l.split('|');return [p[0].trim(),(p[1]||'').trim()];});}
+function save(rs){$('rows').value=rs.map(r=>r[0]+' | '+r[1]).join('\n');draw();}
+function ed(){const rs=rowsOf();$('ed').innerHTML=rs.map((r,i)=>editing?'<div style="display:grid;grid-template-columns:1fr 120px 36px;gap:6px;margin-bottom:6px"><input data-i="'+i+'" data-k="0" value="'+esc(r[0])+'"><input data-i="'+i+'" data-k="1" value="'+esc(r[1])+'"><button type="button" class="btn" data-del="'+i+'" title="Delete">&times;</button></div>':'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)"><span>'+esc(r[0])+'</span><b>'+esc(r[1])+'</b></div>').join('');
+ $('add').style.display=editing?'':'none';$('editToggle').innerHTML=editing?'<i class="fa-solid fa-check"></i> Done':'<i class="fa-solid fa-pen"></i> Edit rates';}
+$('ed').oninput=e=>{const i=+e.target.dataset.i,k=+e.target.dataset.k;if(isNaN(i))return;const rs=rowsOf();rs[i][k]=e.target.value;save(rs);};
+$('ed').onclick=e=>{const b=e.target.closest('[data-del]');if(!b)return;const rs=rowsOf();rs.splice(+b.dataset.del,1);save(rs);ed();};
+$('add').onclick=()=>{const rs=rowsOf();rs.push(['New service','Rs. 0']);save(rs);ed();};
+$('editToggle').onclick=()=>{editing=!editing;ed();};
+['shop','sub'].forEach(k=>$(k).oninput=draw); $('pr').onclick=()=>window.print(); draw(); ed();</script></body></html>

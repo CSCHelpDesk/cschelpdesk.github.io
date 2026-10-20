@@ -268,7 +268,9 @@
                     </select>
                 </div>
 
-                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print A4 Sheet (6 Cards)</button>
+                <h3>Fit and adjust images</h3>
+<div id="adj_prev_f1"></div><div id="adj_prev_b1"></div><div id="adj_prev_f2"></div><div id="adj_prev_b2"></div><div id="adj_prev_f3"></div><div id="adj_prev_b3"></div>
+<button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print A4 Sheet (6 Cards)</button>
             </div>
 
             <!-- Right Preview Panel (A4 Sheet) -->
@@ -346,6 +348,15 @@
             });
         }
     </script>
+<script src="assets/js/img-adjust.js"></script>
+<script>
+CSCAdjust.attach({img:document.getElementById('prev_f1'),slot:document.getElementById('prev_f1').parentElement,mount:document.getElementById('adj_prev_f1'),label:'Card 1 front'});
+CSCAdjust.attach({img:document.getElementById('prev_b1'),slot:document.getElementById('prev_b1').parentElement,mount:document.getElementById('adj_prev_b1'),label:'Card 1 back'});
+CSCAdjust.attach({img:document.getElementById('prev_f2'),slot:document.getElementById('prev_f2').parentElement,mount:document.getElementById('adj_prev_f2'),label:'Card 2 front'});
+CSCAdjust.attach({img:document.getElementById('prev_b2'),slot:document.getElementById('prev_b2').parentElement,mount:document.getElementById('adj_prev_b2'),label:'Card 2 back'});
+CSCAdjust.attach({img:document.getElementById('prev_f3'),slot:document.getElementById('prev_f3').parentElement,mount:document.getElementById('adj_prev_f3'),label:'Card 3 front'});
+CSCAdjust.attach({img:document.getElementById('prev_b3'),slot:document.getElementById('prev_b3').parentElement,mount:document.getElementById('adj_prev_b3'),label:'Card 3 back'});
+</script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>

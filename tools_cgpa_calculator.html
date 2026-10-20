@@ -116,7 +116,7 @@
 <style>
 /* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
 @page{size:A4;margin:0}
-@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+@media print{body *{visibility:hidden}#slip,#slip *{visibility:visible}#slip{position:absolute;left:0;top:0;width:100%}body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
 </style>
 <style id="pageStyle"></style>
 </head>
@@ -129,6 +129,17 @@
         <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Calculators</div><h1>CGPA & Percentage Calculator</h1><p>Convert your cumulative grade point average (CGPA) into accurate percentage scores instantly.</p></div>
 
         <div class="calc-card">
+            <h3 style="margin-top:6px">Student details (optional, for printing)</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+                <div class="input-group"><label>Student name</label><input type="text" id="sName"></div>
+                <div class="input-group"><label>Roll no. / Enrolment no.</label><input type="text" id="sRoll"></div>
+                <div class="input-group"><label>University / College</label><input type="text" id="sUni"></div>
+                <div class="input-group"><label>Course</label><input type="text" id="sCourse" placeholder="e.g. B.Sc, B.Tech"></div>
+                <div class="input-group"><label>Hobbies</label><input type="text" id="sHobby" placeholder="e.g. Reading, Cricket"></div>
+                <div class="input-group"><label>Languages known</label><input type="text" id="sLang" placeholder="e.g. Hindi, English"></div>
+            </div>
+            <button type="button" class="btn-action" style="background:#555;margin-bottom:12px" onclick="demoFill()"><i class="fa-solid fa-flask"></i> Fill demo (practice)</button>
+
             <h3>Enter Your CGPA Details</h3>
             <div class="input-group">
                 <label>Overall CGPA (e.g., 8.25)</label>
@@ -158,6 +169,12 @@
                         <label>Equivalent Percentage</label>
                     </div>
                 </div>
+                <div id="slip" style="margin-top:16px;border:2px solid #0b5c3b;border-radius:8px;padding:16px;background:#fff;color:#111;text-align:left">
+                    <div style="text-align:center;font-weight:800;font-size:18px;color:#0b5c3b">CGPA TO PERCENTAGE CERTIFICATE (INFORMATION SLIP)</div>
+                    <table id="slipTbl" style="width:100%;border-collapse:collapse;margin-top:10px;font-size:14px"></table>
+                    <p style="font-size:11px;color:#555;margin-top:8px">Calculated as CGPA x <span id="slipMul"></span>. This is an information slip only. Use the formula given by your own university or board.</p>
+                </div>
+                <button type="button" class="btn-action no-print" style="margin-top:10px" onclick="window.print()"><i class="fa-solid fa-print"></i> Print result</button>
             </div>
         </div>
     </div>
@@ -165,6 +182,9 @@
     </main>
 <footer id="site-footer"></footer>
 <script>
+        const SF=[['sName','Student name'],['sRoll','Roll / Enrolment no.'],['sUni','University / College'],['sCourse','Course'],['sHobby','Hobbies'],['sLang','Languages known']];
+        const ESC=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        function demoFill(){const d=['Rohit Sharma','21BSC1045','Maharshi Dayanand University, Rohtak','B.Sc (Computer Science)','Reading, Cricket','Hindi, English, Punjabi'];SF.forEach((f,i)=>document.getElementById(f[0]).value=d[i]);document.getElementById('cgpaInput').value='8.25';calculatePercentage();}
         function calculatePercentage() {
             const cgpa = parseFloat(document.getElementById('cgpaInput').value);
             const multiplier = parseFloat(document.getElementById('formulaMultiplier').value);
@@ -178,9 +198,13 @@
 
             document.getElementById('resCgpa').innerText = cgpa.toFixed(2);
             document.getElementById('resPercentage').innerText = percentage.toFixed(2) + '%';
+            const rows=SF.map(f=>[f[1],document.getElementById(f[0]).value.trim()]).filter(r=>r[1]).concat([['CGPA',cgpa.toFixed(2)+' / 10'],['Equivalent percentage',percentage.toFixed(2)+'%']]);
+            document.getElementById('slipTbl').innerHTML=rows.map(r=>'<tr><td style="border:1px solid #bbb;padding:6px 8px;width:40%;font-weight:600">'+ESC(r[0])+'</td><td style="border:1px solid #bbb;padding:6px 8px">'+ESC(r[1])+'</td></tr>').join('');
+            document.getElementById('slipMul').innerText=multiplier;
             document.getElementById('resultArea').style.display = 'block';
         }
     </script>
 <script src="assets/js/site.js"></script>
+<script src="assets/js/page-theme.js"></script>
 </body>
 </html>

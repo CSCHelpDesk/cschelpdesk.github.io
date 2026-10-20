@@ -74,6 +74,7 @@
         <div class="actions">
           <button class="btn" id="print"><i class="fa-solid fa-print" aria-hidden="true"></i>Print receipts</button>
           <button class="btn alt" id="clear" type="button">Clear customer</button>
+          <button class="btn alt" id="demo" type="button"><i class="fa-solid fa-flask" aria-hidden="true"></i>Fill demo (practice)</button>
         </div>
         <p style="font-size:.8rem;color:var(--muted);margin-top:10px">Shop details are remembered on this computer. In the print window choose A4, Scale 100%, and turn off Headers and footers.</p>
       </section>
@@ -135,6 +136,10 @@
     $('print').addEventListener('click',()=>window.print());
     window.addEventListener('afterprint',()=>{ const next=(parseInt($('rno').value)||n)+1; $('rno').value=next; try{localStorage.setItem('cscdesk_rno',next);}catch(e){} render(); });
     $('clear').addEventListener('click',()=>{ ['cust','acct','period','amt','note'].forEach(k=>$(k).value=''); $('fee').value='0'; render(); });
+    $('demo').addEventListener('click',()=>{
+      const d={shop:'Demo CSC Centre',addr:'Main Bazar, Rohtak, Haryana',phone:'9876543210',cust:'Ramesh Kumar',acct:'1234567890',period:'Oct 2026',amt:'1850.50',fee:'20',note:'Demo receipt for practice'};
+      Object.keys(d).forEach(k=>$(k).value=d[k]); render();
+    });
     render();
   })();
   </script>

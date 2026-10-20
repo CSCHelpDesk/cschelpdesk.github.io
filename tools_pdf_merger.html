@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- jsPDF Library CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
 <link rel="stylesheet" href="assets/css/portal.css">
@@ -170,6 +171,29 @@
                 </p>
 
                 <button class="btn-action" id="convertBtn" onclick="generatePDF()" style="display: none;"><i class="fa-solid fa-file-arrow-down"></i> Convert & Download PDF</button>
+
+                <h3 style="margin-top:22px">2. PDF size compressor</h3>
+                <div class="input-group">
+                    <label>Choose a PDF</label>
+                    <input type="file" id="pdfIn" accept="application/pdf">
+                </div>
+                <div class="input-group">
+                    <label>Compression level</label>
+                    <select id="pdfLvl">
+                        <option value="0">Light (best quality)</option>
+                        <option value="1" selected>Medium</option>
+                        <option value="2">Strong</option>
+                        <option value="3">Extreme (smallest)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Target size in KB (optional, tries to get under this)</label>
+                    <input type="number" id="pdfKb" min="20" placeholder="e.g. 200">
+                </div>
+                <button class="btn-action" id="pdfBtn" type="button" onclick="compressPdf()"><i class="fa-solid fa-compress"></i> Compress PDF</button>
+                <p id="pdfMsg" style="font-size:12px;color:#444;margin-top:8px"></p>
+                <a id="pdfDl" class="btn-action" style="display:none;text-align:center;text-decoration:none;margin-top:6px" download="compressed.pdf"><i class="fa-solid fa-download"></i> Download compressed PDF</a>
+                <p style="font-size:11px;color:#666;margin-top:6px">Pages are re-saved as images, so text in the new PDF cannot be selected. Best for scanned documents and forms for upload.</p>
             </div>
 
             <!-- Right Preview Panel -->
@@ -186,6 +210,43 @@
     </main>
 <footer id="site-footer"></footer>
 <script>
+        const LV=[[2,.8],[1.5,.6],[1.2,.45],[1,.3]];
+        async function pdfRender(buf,scale,q){
+            const doc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise;
+            const { jsPDF } = window.jspdf; let pdf=null;
+            for(let i=1;i<=doc.numPages;i++){
+                const pg=await doc.getPage(i), vp=pg.getViewport({scale:scale});
+                const c=document.createElement('canvas'); c.width=vp.width; c.height=vp.height;
+                const cx=c.getContext('2d'); cx.fillStyle='#fff'; cx.fillRect(0,0,c.width,c.height);
+                await pg.render({canvasContext:cx,viewport:vp}).promise;
+                const w=pg.getViewport({scale:1}), orient=w.width>w.height?'l':'p';
+                if(!pdf) pdf=new jsPDF({orientation:orient,unit:'pt',format:[w.width,w.height]}); else pdf.addPage([w.width,w.height],orient);
+                pdf.addImage(c.toDataURL('image/jpeg',q),'JPEG',0,0,w.width,w.height);
+            }
+            return pdf.output('blob');
+        }
+        async function compressPdf(){
+            const f=document.getElementById('pdfIn').files[0], msg=document.getElementById('pdfMsg'), dl=document.getElementById('pdfDl');
+            if(!f){msg.textContent='Please choose a PDF first.';return;}
+            pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+            dl.style.display='none'; document.getElementById('pdfBtn').disabled=true;
+            try{
+                const buf=await f.arrayBuffer(), target=(parseInt(document.getElementById('pdfKb').value)||0)*1024;
+                let lvl=+document.getElementById('pdfLvl').value, out=null;
+                for(;lvl<LV.length;lvl++){
+                    msg.textContent='Compressing (level '+(lvl+1)+' of 4)... please wait';
+                    out=await pdfRender(buf,LV[lvl][0],LV[lvl][1]);
+                    if(!target||out.size<=target) break;
+                }
+                const kb=b=>(b/1024).toFixed(0)+' KB';
+                if(out.size>=f.size){msg.textContent='This PDF is already small ('+kb(f.size)+'). Compression would not reduce it, so no new file was made.';}
+                else{
+                    dl.href=URL.createObjectURL(out); dl.style.display='block';
+                    msg.textContent='Done: '+kb(f.size)+' to '+kb(out.size)+(target&&out.size>target?' (could not reach the target; this is the smallest this tool makes)':'');
+                }
+            }catch(e){msg.textContent='Could not read this PDF. It may be password protected or damaged.';}
+            document.getElementById('pdfBtn').disabled=false;
+        }
         let uploadedFiles = [];
 
         function handleFiles(event) {

@@ -223,6 +223,8 @@
                     <i class="fa-solid fa-circle-info"></i> Images automatically snap to standard 85.6mm x 53.98mm dimensions for PVC card trays or photo paper printing.
                 </p>
 
+                <h3>3. Fit and adjust</h3>
+                <div id="adjFront"></div><div id="adjBack"></div>
                 <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Cards / Save PDF</button>
             </div>
 
@@ -270,6 +272,11 @@
             reader.readAsDataURL(file);
         }
     </script>
+<script src="assets/js/img-adjust.js"></script>
+<script>
+  CSCAdjust.attach({img:document.getElementById('frontPreview'),slot:document.getElementById('frontPreview').parentElement,mount:document.getElementById('adjFront'),label:'Front side'});
+  CSCAdjust.attach({img:document.getElementById('backPreview'),slot:document.getElementById('backPreview').parentElement,mount:document.getElementById('adjBack'),label:'Back side'});
+</script>
 <script src="assets/js/site.js"></script>
 </body>
 </html>

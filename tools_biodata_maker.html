@@ -332,6 +332,15 @@
                     <textarea id="contactAddress" oninput="updateBiodata()">House No. 456, Sector 14, Rohtak, Haryana - 124001</textarea>
                 </div>
 
+                <h3>6. More details (optional)</h3>
+                <p style="font-size:11px;color:#666;margin-bottom:8px">Leave a box empty and that line will not print.</p>
+                <div id="extraForm"></div>
+                <h3>7. Partner preference (optional)</h3>
+                <div id="partnerForm"></div>
+                <h3>8. Your own extra lines</h3>
+                <div id="customForm"></div>
+                <button type="button" class="btn-print" style="background:#555;margin-top:8px" onclick="addCustom()"><i class="fa-solid fa-plus"></i> Add a line (title + value)</button>
+
                 <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Biodata as PDF</button>
             </div>
 
@@ -437,11 +446,27 @@
                             <td id="prevPhone" style="font-weight:bold;">+91 98765 43210</td>
                         </tr>
                         <tr>
+                            <td class="label-col">Mother's Name</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevMother"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Siblings</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevSiblings"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Contact Phone</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevPhone"></td>
+                        </tr>
+                        <tr>
                             <td class="label-col">Residential Address</td>
                             <td class="colon-col">:</td>
                             <td id="prevAddress">House No. 456, Sector 14, Rohtak, Haryana - 124001</td>
                         </tr>
                     </table>
+                    <div id="prevExtra"></div>
                 </div>
             </div>
         </div>
@@ -461,6 +486,22 @@
             reader.readAsDataURL(file);
         }
 
+
+        const EXTRA=[['religion','Religion','Hindu'],['rashi','Rashi / Nakshatra',''],['manglik','Manglik','No'],['gotra','Gotra',''],['diet','Food habit','Vegetarian'],['hobby','Hobbies','Reading, Cricket, Travel'],['lang','Languages known','Hindi, English'],['weight','Weight',''],['maternal','Maternal uncle / Mama (Nanihal)','']];
+        const PARTNER=[['pAge','Preferred age',''],['pHeight','Preferred height',''],['pEdu','Preferred education',''],['pOcc','Preferred occupation',''],['pOther','Other expectations','']];
+        function mk(list,id){document.getElementById(id).innerHTML=list.map(f=>'<div class="input-group"><label>'+f[1]+'</label><input type="text" id="x_'+f[0]+'" value="'+f[2]+'" oninput="updateBiodata()"></div>').join('');}
+        mk(EXTRA,'extraForm');mk(PARTNER,'partnerForm');
+        let customN=0;
+        function addCustom(){customN++;const d=document.createElement('div');d.className='input-group';d.innerHTML='<input type="text" class="cT" placeholder="Title e.g. Languages" oninput="updateBiodata()" style="margin-bottom:4px"><input type="text" class="cV" placeholder="Value" oninput="updateBiodata()">';document.getElementById('customForm').appendChild(d);}
+        const E=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        function block(title,icon,rows){rows=rows.filter(r=>r[1].trim());if(!rows.length)return '';return '<div class="bio-section-title"><i class="fa-solid fa-'+icon+'"></i> '+title+'</div><table class="bio-table">'+rows.map(r=>'<tr><td class="label-col">'+E(r[0])+'</td><td class="colon-col">:</td><td>'+E(r[1])+'</td></tr>').join('')+'</table>';}
+        function renderExtra(){
+            const g=id=>document.getElementById('x_'+id).value;
+            const cust=[...document.querySelectorAll('#customForm .input-group')].map(d=>[d.querySelector('.cT').value,d.querySelector('.cV').value]).filter(r=>r[0].trim()&&r[1].trim());
+            document.getElementById('prevExtra').innerHTML=
+              block('Additional Details','star',EXTRA.map(f=>[f[1],g(f[0])]).concat(cust))+
+              block('Partner Preference','heart',PARTNER.map(f=>[f[1],g(f[0])]));
+        }
         function updateBiodata() {
             document.getElementById('prevGod').innerText = document.getElementById('godHeading').value;
             document.getElementById('prevName').innerText = document.getElementById('candName').value;
@@ -481,6 +522,7 @@
 
             document.getElementById('prevPhone').innerText = document.getElementById('contactPhone').value;
             document.getElementById('prevAddress').innerText = document.getElementById('contactAddress').value;
+            renderExtra();
         }
 
         // Initialize preview

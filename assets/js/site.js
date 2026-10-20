@@ -1,5 +1,6 @@
 /* ===== CSC DESK: single source of truth. Edit here, every page updates. ===== */
 const SITE = {
+  defaultTheme: "light",
   name: "CSC Desk",            // change brand name here
   year: 2026,
   nav: [
@@ -15,14 +16,19 @@ const SITE = {
     ["Driving licence", "Parivahan Sarathi", "car", "https://sarathi.parivahan.gov.in"],
     ["Income tax", "e-Filing portal", "indian-rupee-sign", "https://www.incometax.gov.in"],
     ["UHBVN bill", "Haryana north zone", "bolt", "https://uhbvn.org.in"],
-    ["DHBVN bill", "Haryana south zone", "bolt", "https://dhbvn.org.in"]
+    ["DHBVN bill", "Haryana south zone", "bolt", "https://dhbvn.org.in"],
+    ["Saral Haryana", "Haryana citizen services", "file-signature", "https://saralharyana.gov.in"],
+    ["Parivar Pehchan Patra", "Family ID (PPP) Haryana", "users", "https://meraparivar.haryana.gov.in"],
+    ["Old age pension", "Haryana pension status", "hand-holding-heart", "https://pension.socialjusticehry.gov.in"],
+    ["DSSSB", "Delhi recruitment board", "briefcase", "https://dsssb.delhi.gov.in"],
+    ["PM Awas Yojana (Gramin)", "Rural housing scheme", "house-chimney", "https://pmayg.nic.in"]
   ],
   cats: ["CSC counter", "Documents", "Photo & ID print", "PDF & image", "Calculators", "Utilities"],
   // [title, category, file, icon, description, live?]  -> add one line per new template.
   // live=1 shows "Ready"; live=0 shows "Soon" and is not clickable.
   tools: [
     ["Utility bill receipt", "CSC counter", "tools_bill_receipt_generator.html", "receipt", "Two half-A4 receipts: customer copy and office copy.", 1],
-    ["Service rate list", "CSC counter", "csc-rate-list.html", "list-check", "Printable rate board for your counter.", 0],
+    ["Service rate list", "CSC counter", "tools_service_rate_list.html", "list-check", "Printable rate board for your counter.", 1],
     ["Counter stamp maker", "CSC counter", "tools_csc_stamp_maker.html", "stamp", "Round and rectangle shop stamps.", 1],
     ["Invoice generator", "CSC counter", "tools_invoice_generator.html", "file-invoice", "Simple GST-ready invoices.", 1],
     ["Visiting card maker", "CSC counter", "visiting-card-maker.html", "address-book", "Print-ready cards, 10 per A4.", 0],
@@ -39,10 +45,10 @@ const SITE = {
     ["PAN & ID card print", "Photo & ID print", "tools_pan_aadhaar_print.html", "print", "Front and back card scans at exact size.", 1],
     ["ID card print (front + back)", "Photo & ID print", "tools_id_card_print.html", "credit-card", "Front and back of a card on one A4, exact card size.", 1],
     ["Student ID card", "Photo & ID print", "student-id-card.html", "graduation-cap", "School and college ID layouts.", 0],
-    ["Photo + name joiner", "Photo & ID print", "photo-name-joiner.html", "id-badge", "Add name and date strip for exam forms.", 0],
-    ["Photo + signature joiner", "Photo & ID print", "photo-signature-joiner.html", "signature", "Combine photo and signature in one image.", 0],
+    ["Photo + name joiner", "Photo & ID print", "tools_photo_name_joiner.html", "id-badge", "Add name and date strip for exam forms.", 1],
+    ["Photo + signature joiner", "Photo & ID print", "tools_photo_signature_joiner.html", "signature", "Combine photo and signature in one image.", 1],
     ["Photo & signature resizer", "PDF & image", "tools_photo_resizer.html", "up-right-and-down-left-from-center", "Resize to exact pixels and KB for exam forms.", 1],
-    ["Image compressor", "PDF & image", "image-compressor.html", "compress", "Reduce size for portal uploads.", 0],
+    ["Image compressor", "PDF & image", "tools_image_compressor.html", "compress", "Reduce size for portal uploads.", 1],
     ["Images to PDF", "PDF & image", "tools_pdf_merger.html", "file-pdf", "Combine photos and scans into one PDF.", 1],
     ["PDF merge", "PDF & image", "pdf-merge.html", "object-group", "Join several PDFs.", 0],
     ["PDF split", "PDF & image", "pdf-split.html", "scissors", "Pull pages out of a PDF.", 0],
@@ -51,11 +57,11 @@ const SITE = {
     ["GST calculator", "Calculators", "tool-template.html", "percent", "Add or remove GST from a price.", 1],
     ["Loan EMI calculator", "Calculators", "tools_loan_emi_calculator.html", "calculator", "Monthly EMI and total interest.", 1],
     ["Percentage calculator", "Calculators", "tools_percentage_calculator.html", "chart-simple", "Marks percentage, percent of a value, and change.", 1],
-    ["Date difference", "Calculators", "date-calculator.html", "calendar-days", "Days between two dates.", 0],
+    ["Date difference", "Calculators", "tools_date_calculator.html", "calendar-days", "Days between two dates.", 1],
     ["QR code generator", "Utilities", "tools_qr_code_generator.html", "qrcode", "QR for links, UPI and text.", 1],
     ["Typing test", "Utilities", "typing-test.html", "keyboard", "English and Hindi typing speed.", 0],
     ["Gold & silver rate", "Utilities", "gold-silver-rate.html", "coins", "Daily rate reference.", 0],
-    ["Notebook name sticker", "Utilities", "notebook-sticker.html", "book", "Printable name labels.", 0],
+    ["Notebook name sticker", "Utilities", "tools_notebook_sticker.html", "book", "Printable name labels.", 1],
     ["Multiple ID cards print", "Photo & ID print", "tools_multiple_id_card_print.html", "clone", "Up to 3 cards, front and back, on one A4.", 1],
     ["Image text reader (OCR)", "PDF & image", "tools_image_text_extractor.html", "wand-magic-sparkles", "Read text from a photo or scan, English and Hindi.", 1],
     ["CGPA to percentage", "Calculators", "tools_cgpa_calculator.html", "graduation-cap", "Convert CGPA using your university formula.", 1],
@@ -65,6 +71,11 @@ const SITE = {
 
 (function () {
   const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const THEMES = [['light','Light green'],['purple','Purple'],['ocean','Ocean blue'],['rose','Rose'],['dark','Dark'],['auto','Auto (device)']];
+  let theme = SITE.defaultTheme;
+  try { theme = localStorage.getItem('cscdesk_theme') || theme; } catch (e) {}
+  const applyTheme = v => v === 'auto' ? document.documentElement.removeAttribute('data-theme') : document.documentElement.setAttribute('data-theme', v);
+  applyTheme(theme);
   const here = location.pathname.split('/').pop() || 'index.html';
   const I = n => `<i class="fa-solid fa-${n}" aria-hidden="true"></i>`;
 
@@ -75,7 +86,7 @@ const SITE = {
       <a class="logo" href="index.html"><span class="logo-mark">${I('desktop')}</span>${esc(SITE.name)}</a>
       <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu">${I('bars')}</button>
       <ul class="nav-links" id="nav-links">${SITE.nav.map(n =>
-        `<li><a href="${esc(n.href)}"${n.href === here ? ' aria-current="page"' : ''}>${I(n.icon)}${esc(n.label)}</a></li>`).join('')}</ul></div>`;
+        `<li><a href="${esc(n.href)}"${n.href === here ? ' aria-current="page"' : ''}>${I(n.icon)}${esc(n.label)}</a></li>`).join('')}<li><select class="theme-pick" id="theme-pick" aria-label="Colour theme">${THEMES.map(([v,l]) => `<option value="${v}">${l}</option>`).join('')}</select></li></ul></div>`;
     const b = header.querySelector('.nav-toggle'), l = header.querySelector('.nav-links');
     b.addEventListener('click', () => b.setAttribute('aria-expanded', l.classList.toggle('open')));
   }
@@ -112,4 +123,6 @@ const SITE = {
     });
     search.addEventListener('input', draw); draw();
   }
+  const pick = document.getElementById('theme-pick');
+  if (pick) { pick.value = theme; pick.addEventListener('change', () => { applyTheme(pick.value); try { localStorage.setItem('cscdesk_theme', pick.value); } catch (e) {} }); }
 })();

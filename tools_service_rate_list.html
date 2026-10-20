@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Service rate list | CSC Desk</title><meta name="description" content="Make a printable rate board for your counter. One service per line.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>@page{size:A4;margin:0}.rl{width:210mm;min-height:297mm;padding:18mm 16mm;max-width:100%;overflow:auto;text-align:center}
+.rl h2{font-size:26pt;color:#0b6e4f;font-weight:800}.rl p{color:#444}.rl h3{margin:14px 0 8px;font-size:15pt;border-top:3px solid #0b6e4f;border-bottom:3px solid #0b6e4f;padding:6px}
+.rl table{width:100%;border-collapse:collapse;font-size:13pt;text-align:left}.rl th{background:#0b6e4f;color:#fff;padding:8px 10px}
+.rl td{padding:8px 10px;border-bottom:1px solid #ccc}.rl td+td,.rl th+th{text-align:right;width:34%}.rl .foot{margin-top:14px;font-size:10pt}</style></head><body>
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
+<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / CSC counter</div><h1>Service rate list</h1><p>Make a printable rate board for your counter. One service per line.</p></div>
+<div class="split"><section class="panel no-print">
+<div class="field"><label for="shop">Shop name</label><input id="shop" value="Your CSC Centre"></div>
+<div class="field"><label for="sub">Line under the name (phone, address)</label><input id="sub" value="Call: 00000 00000"></div>
+<div class="field"><label for="rows">Services, one per line: Service | Rate</label><textarea id="rows" rows="12" style="font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text)"></textarea></div>
+<p class="note">These are sample rates. Change them to your own before printing. Saved on this computer.</p>
+<button class="btn" id="pr"><i class="fa-solid fa-print"></i> Print rate list</button></section>
+<section><div class="paper rl" id="sheet"></div></section></div></main><footer id="site-footer"></footer>
+<script src="assets/js/site.js"></script><script>
+const $=id=>document.getElementById(id);
+
+const DEF="Black & white print (A4) | Rs. 2\nColour print (A4) | Rs. 10\nPhotocopy | Rs. 2\nScan and email | Rs. 10\nPassport photo (8 pcs) | Rs. 50\nOnline form filling | As per form\nAadhaar update help | As per UIDAI fee\nPAN application help | As per fee + service charge";
+const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+try{['shop','sub','rows'].forEach(k=>{const v=localStorage.getItem('cscdesk_rl_'+k); if(v!==null)$(k).value=v;});}catch(e){}
+if(!$('rows').value)$('rows').value=DEF;
+function draw(){const body=$('rows').value.split('\n').filter(l=>l.trim()).map(l=>{const p=l.split('|');return '<tr><td>'+esc(p[0].trim())+'</td><td>'+esc((p[1]||'').trim())+'</td></tr>';}).join('');
+ $('sheet').innerHTML='<h2>'+esc($('shop').value)+'</h2><p>'+esc($('sub').value)+'</p><h3>Service Rate List / सेवा दर सूची</h3><table><tr><th>Service</th><th>Rate</th></tr>'+body+'</table><p class="foot">Rates may change. Please ask at the counter.</p>';
+ try{['shop','sub','rows'].forEach(k=>localStorage.setItem('cscdesk_rl_'+k,$(k).value));}catch(e){}}
+['shop','sub','rows'].forEach(k=>$(k).oninput=draw); $('pr').onclick=()=>window.print(); draw();</script></body></html>

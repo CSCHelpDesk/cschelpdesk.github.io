@@ -88,7 +88,18 @@
     // [name, short description, url, font-awesome icon]
     ['Mobisafar Agent Portal', 'AEPS & banking login', 'https://agent.mobisafar.com/MOBISAFAR/Login.aspx', 'fa-wallet'],
     ['CSC DigiPay Lite', 'Micro ATM & merchant banking', 'https://digipaylite.in/', 'fa-mobile-screen-button'],
-    ['CSC Digital Seva Connect', 'Official auth & citizen services', 'https://connect.csc.gov.in/account/authorize?response_type=code&client_id=0f8ca686-5a31-46b8-bb51-d9834ba9fa9d&redirect_uri=https%3A%2F%2Fdigitalseva.csc.gov.in%2Fauth%2Fcallback%2F&state=45937', 'fa-id-card-clip']
+    ['CSC Digital Seva Connect', 'Official auth & citizen services', 'https://connect.csc.gov.in/account/authorize?response_type=code&client_id=0f8ca686-5a31-46b8-bb51-d9834ba9fa9d&redirect_uri=https%3A%2F%2Fdigitalseva.csc.gov.in%2Fauth%2Fcallback%2F&state=45937', 'fa-id-card-clip'],
+    ['CM Window Status', 'Haryana CM grievance status', 'https://cmharyanacell.nic.in/citizen/view-status?TabID=V', 'fa-clipboard-check'],
+    ['HR CD Service Login', 'Haryana service login', 'https://hry.cdservice.in/Home/HRLogin', 'fa-right-to-bracket'],
+    ['Saral Haryana', 'Citizen services portal', 'https://saralharyana.gov.in/', 'fa-landmark'],
+    ['ePDS Search RC', 'Ration card search', 'https://epds.haryanafood.gov.in/search-rc', 'fa-wheat-awn'],
+    ['PPP Office Haryana', 'Parivar Pehchan Patra', 'https://ppp-office.haryana.gov.in/', 'fa-people-roof'],
+    ['Mera Parivar', 'Haryana family portal', 'https://meraparivar.haryana.gov.in/', 'fa-users'],
+    ['Housing PMS Consumer', 'Consumer login', 'https://consumer.housingpms.org.in/#/login?cid=544', 'fa-house'],
+    ['MDU Samarth (DDE)', 'DDE MDU student login', 'https://ddemdu.samarth.edu.in/index.php/site/login', 'fa-graduation-cap'],
+    ['ePOS SRC Transaction', 'Ration depot transactions', 'https://epos.haryanafood.gov.in/SRC_Trans_Int', 'fa-receipt'],
+    ['Pension Beneficiary Info', 'Social Justice pension', 'https://pension.socialjusticehry.gov.in/Ben_Inf', 'fa-hand-holding-heart'],
+    ['HRTC eBooking', 'Haryana Roadways tickets', 'https://ebooking.hrtransport.gov.in/#/home', 'fa-bus']
   ];
 
   var CSC = window.CSC = { LINKS: LINKS, TOOLS: TOOLS, CATS: CATS, tools: {} };

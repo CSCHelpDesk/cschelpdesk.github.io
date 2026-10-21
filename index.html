@@ -6,6 +6,8 @@
   <title>CSC Desk: Free Tools for CSC VLEs and Cyber Cafes</title>
   <meta name="description" content="Free printable tools for CSC operators and cyber cafes: resume, biodata, rent agreement, salary slip, photo sheets, receipts and quick links to official portals.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
@@ -26,7 +28,11 @@
       padding: 16px;
       box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.05));
       position: sticky;
-      top: 20px;
+      top: calc(var(--hdr-h, 64px) + 16px);
+      z-index: 1;
+      max-height: calc(100vh - var(--hdr-h, 64px) - 32px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
     .categories-sidebar h3 {
       margin-top: 0;
@@ -76,6 +82,8 @@
       }
       .categories-sidebar {
         position: static;
+        max-height: none;
+        overflow: visible;
         margin-top: 20px;
       }
     }
@@ -97,6 +105,16 @@
         <span><b><span id="tool-count">0</span> working tools</b></span>
         <span>Opens on any mobile, tablet or PC</span>
       </div>
+    </section>
+
+    <section class="ledger-banner" aria-label="Shop Ledger app">
+      <div>
+        <span class="tag"><i class="fa-solid fa-star" aria-hidden="true"></i> Long awaited</span>
+        <h2>Shop Ledger App</h2>
+        <p>The long-awaited Shop Ledger app is here for all CSC Mitras and everyday users. Keep daily sales, udhaar and customer accounts in one simple place.</p>
+        <a class="btn" id="ledger-btn" href="#" hidden target="_blank" rel="noopener"><i class="fa-solid fa-book" aria-hidden="true"></i> Open Shop Ledger</a>
+      </div>
+      <img src="assets/img/shop-ledger.svg" alt="Shop Ledger app screen showing today sale, udhaar and recent entries" width="360" height="260" loading="lazy">
     </section>
 
     <div class="portal-workspace">

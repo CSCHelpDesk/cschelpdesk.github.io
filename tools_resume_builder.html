@@ -1,36 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Resume Builder | CSC Desk</title>
-  <meta name="description" content="CSC Desk official utility tool.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/portal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Resume Builder | CSC Desk</title>
+<meta name="description" content="Create and print professional resumes instantly for government jobs, private firms, and interviews.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 950px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .form-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .form-panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 6px;
+            margin-top: 15px;
+        }
+
+        .form-panel h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 60px;
+        }
+
+        .btn-print {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-print:hover {
+            background-color: #07513a;
+        }
+
+        /* Preview Panel (A4 Resume Layout) */
+        .preview-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .resume-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: #333;
+        }
+
+        .res-header {
+            border-bottom: 2px solid #0b6e4f;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .res-name {
+            font-size: 26px;
+            font-weight: bold;
+            color: #0b6e4f;
+            text-transform: uppercase;
+        }
+
+        .res-contact {
+            font-size: 12px;
+            color: #555;
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .res-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0b6e4f;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 3px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .res-content {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        .res-item-title {
+            font-weight: bold;
+            color: #222;
+        }
+
+        .res-item-sub {
+            font-style: italic;
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 4px;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .resume-sheet, .resume-sheet * {
+                visibility: visible;
+            }
+            .resume-sheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 10mm;
+                width: 210mm;
+                height: 297mm;
+            }
+            .form-panel, .header, .back-link, .btn-print {
+                display: none;
+            }
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header id="site-header"></header>
-  <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Resume Builder</h1>
-      <p>CSC Desk official utility tool.</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Documents</div><h1>Professional Resume / CV Builder</h1><p>Create and print professional resumes instantly for government jobs, private firms, and interviews.</p></div>
+
+        <div class="workspace">
+            <!-- Left Form Panel -->
+            <div class="form-panel">
+                <h3>1. Personal Information</h3>
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="inputName" value="Rahul Sharma" oninput="updateResume()">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="inputEmail" value="rahul.sharma@email.com" oninput="updateResume()">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="inputPhone" value="+91 98765 43210" oninput="updateResume()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Address / Location</label>
+                    <input type="text" id="inputAddress" value="Rohtak, Haryana, India" oninput="updateResume()">
+                </div>
+
+                <h3>2. Professional Summary</h3>
+                <div class="input-group">
+                    <textarea id="inputSummary" oninput="updateResume()">Dedicated and detail-oriented professional with extensive experience in administrative operations, customer service, and digital documentation workflows.</textarea>
+                </div>
+
+                <h3>3. Education Qualification</h3>
+                <div class="input-group">
+                    <label>Highest Degree / Qualification</label>
+                    <input type="text" id="inputEduTitle" value="Bachelor of Computer Applications (BCA)" oninput="updateResume()">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Institution / University</label>
+                        <input type="text" id="inputEduInst" value="Maharshi Dayanand University, Rohtak" oninput="updateResume()">
+                    </div>
+                    <div class="input-group">
+                        <label>Passing Year</label>
+                        <input type="text" id="inputEduYear" value="2024" oninput="updateResume()">
+                    </div>
+                </div>
+
+                <h3>4. Work Experience</h3>
+                <div class="input-group">
+                    <label>Job Title / Role</label>
+                    <input type="text" id="inputExpTitle" value="CSC Center Operator & Assistant" oninput="updateResume()">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Company / Organization</label>
+                        <input type="text" id="inputExpComp" value="CSC Seva Kendra" oninput="updateResume()">
+                    </div>
+                    <div class="input-group">
+                        <label>Duration</label>
+                        <input type="text" id="inputExpDuration" value="2024 - Present" oninput="updateResume()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Job Responsibilities</label>
+                    <textarea id="inputExpDesc" oninput="updateResume()">Handled government online form submissions, document verification, Aadhaar/PAN services, printing, and customer support.</textarea>
+                </div>
+
+                <h3>5. Key Skills</h3>
+                <div class="input-group">
+                    <label>Skills (comma separated)</label>
+                    <input type="text" id="inputSkills" value="Data Entry, Document Processing, MS Office, Typing (Hindi & English), Customer Handling" oninput="updateResume()">
+                </div>
+
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Resume as PDF</button>
+            </div>
+
+            <!-- Right Preview Panel -->
+            <div class="preview-panel">
+                <div id="resumeSheet" class="resume-sheet">
+                    <div class="res-header">
+                        <div class="res-name" id="prevName">Rahul Sharma</div>
+                        <div class="res-contact">
+                            <span><i class="fa-solid fa-envelope"></i> <span id="prevEmail">rahul.sharma@email.com</span></span>
+                            <span><i class="fa-solid fa-phone"></i> <span id="prevPhone">+91 98765 43210</span></span>
+                            <span><i class="fa-solid fa-location-dot"></i> <span id="prevAddress">Rohtak, Haryana, India</span></span>
+                        </div>
+                    </div>
+
+                    <div class="res-section-title">Professional Summary</div>
+                    <div class="res-content" id="prevSummary">Dedicated and detail-oriented professional with extensive experience in administrative operations, customer service, and digital documentation workflows.</div>
+
+                    <div class="res-section-title">Education</div>
+                    <div class="res-content">
+                        <div class="res-item-title" id="prevEduTitle">Bachelor of Computer Applications (BCA)</div>
+                        <div class="res-item-sub"><span id="prevEduInst">Maharshi Dayanand University, Rohtak</span> | Year: <span id="prevEduYear">2024</span></div>
+                    </div>
+
+                    <div class="res-section-title">Work Experience</div>
+                    <div class="res-content">
+                        <div class="res-item-title" id="prevExpTitle">CSC Center Operator & Assistant</div>
+                        <div class="res-item-sub"><span id="prevExpComp">CSC Seva Kendra</span> | <span id="prevExpDuration">2024 - Present</span></div>
+                        <div id="prevExpDesc">Handled government online form submissions, document verification, Aadhaar/PAN services, printing, and customer support.</div>
+                    </div>
+
+                    <div class="res-section-title">Key Skills</div>
+                    <div class="res-content" id="prevSkills">
+                        Data Entry, Document Processing, MS Office, Typing (Hindi & English), Customer Handling
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Resume Builder Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
-  </main>
-  <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        function updateResume() {
+            document.getElementById('prevName').innerText = document.getElementById('inputName').value;
+            document.getElementById('prevEmail').innerText = document.getElementById('inputEmail').value;
+            document.getElementById('prevPhone').innerText = document.getElementById('inputPhone').value;
+            document.getElementById('prevAddress').innerText = document.getElementById('inputAddress').value;
+            document.getElementById('prevSummary').innerText = document.getElementById('inputSummary').value;
+
+            document.getElementById('prevEduTitle').innerText = document.getElementById('inputEduTitle').value;
+            document.getElementById('prevEduInst').innerText = document.getElementById('inputEduInst').value;
+            document.getElementById('prevEduYear').innerText = document.getElementById('inputEduYear').value;
+
+            document.getElementById('prevExpTitle').innerText = document.getElementById('inputExpTitle').value;
+            document.getElementById('prevExpComp').innerText = document.getElementById('inputExpComp').value;
+            document.getElementById('prevExpDuration').innerText = document.getElementById('inputExpDuration').value;
+            document.getElementById('prevExpDesc').innerText = document.getElementById('inputExpDesc').value;
+
+            document.getElementById('prevSkills').innerText = document.getElementById('inputSkills').value;
+        }
+    </script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>

@@ -1,36 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cover Letter Generator | CSC Desk</title>
-  <meta name="description" content="CSC Desk official utility tool.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/portal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Cover Letter Generator | CSC Desk</title>
+<meta name="description" content="Create compelling, professional cover letters tailored for job applications in seconds.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 950px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .form-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .form-panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 6px;
+            margin-top: 15px;
+        }
+
+        .form-panel h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"], input[type="email"], textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
+
+        .btn-print {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-print:hover {
+            background-color: #07513a;
+        }
+
+        /* Preview Panel (A4 Cover Letter Layout) */
+        .preview-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .letter-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 20mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: #333;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .letter-header {
+            margin-bottom: 25px;
+        }
+
+        .letter-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0b6e4f;
+        }
+
+        .letter-contact {
+            font-size: 12px;
+            color: #555;
+            margin-top: 3px;
+        }
+
+        .letter-date {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .letter-recipient {
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .letter-salutation {
+            margin-bottom: 15px;
+        }
+
+        .letter-body {
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .letter-closing {
+            margin-top: 30px;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .letter-sheet, .letter-sheet * {
+                visibility: visible;
+            }
+            .letter-sheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 15mm;
+                width: 210mm;
+                height: 297mm;
+            }
+            .form-panel, .header, .back-link, .btn-print {
+                display: none;
+            }
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header id="site-header"></header>
-  <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Cover Letter Generator</h1>
-      <p>CSC Desk official utility tool.</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Documents</div><h1>Cover Letter Generator</h1><p>Create compelling, professional cover letters tailored for job applications in seconds.</p></div>
+
+        <div class="workspace">
+            <!-- Left Form Panel -->
+            <div class="form-panel">
+                <h3>1. Your Details (Applicant)</h3>
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="inputName" value="Rahul Sharma" oninput="updateLetter()">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="inputEmail" value="rahul.sharma@email.com" oninput="updateLetter()">
+                    </div>
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="inputPhone" value="+91 98765 43210" oninput="updateLetter()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Address</label>
+                    <input type="text" id="inputAddress" value="Rohtak, Haryana - 124001" oninput="updateLetter()">
+                </div>
+
+                <h3>2. Recipient Details (Employer)</h3>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Hiring Manager Name</label>
+                        <input type="text" id="inputHiringManager" value="Mr. Rajesh Verma" oninput="updateLetter()">
+                    </div>
+                    <div class="input-group">
+                        <label>Company Name</label>
+                        <input type="text" id="inputCompany" value="Apex Solutions Ltd." oninput="updateLetter()">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Company Address</label>
+                    <input type="text" id="inputCompAddress" value="Cyber City, Gurgaon, Haryana" oninput="updateLetter()">
+                </div>
+
+                <h3>3. Job Position & Content</h3>
+                <div class="input-group">
+                    <label>Job Title Applying For</label>
+                    <input type="text" id="inputJobTitle" value="Senior Operations Executive" oninput="updateLetter()">
+                </div>
+                <div class="input-group">
+                    <label>Opening Paragraph</label>
+                    <textarea id="inputPara1" oninput="updateLetter()">I am writing to express my strong interest in the position of Senior Operations Executive at Apex Solutions Ltd. With my background in administrative workflows and efficient documentation management, I am confident in my ability to bring immediate value to your team.</textarea>
+                </div>
+                <div class="input-group">
+                    <label>Body / Core Experience</label>
+                    <textarea id="inputPara2" oninput="updateLetter()">Over the past few years, I have successfully handled complex data processing tasks, verified government and corporate documents, and streamlined office operations. My attention to detail and ability to manage high-volume workflows under tight deadlines make me a strong fit for this role.</textarea>
+                </div>
+                <div class="input-group">
+                    <label>Closing Paragraph</label>
+                    <textarea id="inputPara3" oninput="updateLetter()">Thank you for considering my application. I look forward to the opportunity to discuss how my skills and experiences align with the goals of Apex Solutions Ltd.</textarea>
+                </div>
+
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Cover Letter as PDF</button>
+            </div>
+
+            <!-- Right Preview Panel -->
+            <div class="preview-panel">
+                <div id="letterSheet" class="letter-sheet">
+                    <div class="letter-header">
+                        <div class="letter-name" id="prevName">Rahul Sharma</div>
+                        <div class="letter-contact" id="prevContact">Rohtak, Haryana - 124001 | rahul.sharma@email.com | +91 98765 43210</div>
+                    </div>
+
+                    <div class="letter-date" id="prevDate">October 18, 2026</div>
+
+                    <div class="letter-recipient">
+                        <div id="prevHiringManager" style="font-weight: bold;">Mr. Rajesh Verma</div>
+                        <div id="prevCompany">Apex Solutions Ltd.</div>
+                        <div id="prevCompAddress">Cyber City, Gurgaon, Haryana</div>
+                    </div>
+
+                    <div class="letter-salutation">Dear <span id="prevSalutationName">Mr. Rajesh Verma</span>,</div>
+
+                    <div class="letter-body" id="prevPara1">
+                        I am writing to express my strong interest in the position of Senior Operations Executive at Apex Solutions Ltd. With my background in administrative workflows and efficient documentation management, I am confident in my ability to bring immediate value to your team.
+                    </div>
+
+                    <div class="letter-body" id="prevPara2">
+                        Over the past few years, I have successfully handled complex data processing tasks, verified government and corporate documents, and streamlined office operations. My attention to detail and ability to manage high-volume workflows under tight deadlines make me a strong fit for this role.
+                    </div>
+
+                    <div class="letter-body" id="prevPara3">
+                        Thank you for considering my application. I look forward to the opportunity to discuss how my skills and experiences align with the goals of Apex Solutions Ltd.
+                    </div>
+
+                    <div class="letter-closing">
+                        <div>Sincerely,</div>
+                        <br><br>
+                        <div id="prevSignName" style="font-weight: bold;">Rahul Sharma</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Cover Letter Generator Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
-  </main>
-  <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        // Set formatted current date on load
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        document.getElementById('prevDate').innerText = new Date().toLocaleDateString('en-GB', options);
+
+        function updateLetter() {
+            const name = document.getElementById('inputName').value;
+            const email = document.getElementById('inputEmail').value;
+            const phone = document.getElementById('inputPhone').value;
+            const address = document.getElementById('inputAddress').value;
+
+            document.getElementById('prevName').innerText = name;
+            document.getElementById('prevSignName').innerText = name;
+            document.getElementById('prevContact').innerText = `${address} | ${email} | ${phone}`;
+
+            const manager = document.getElementById('inputHiringManager').value;
+            const company = document.getElementById('inputCompany').value;
+            const compAddress = document.getElementById('inputCompAddress').value;
+
+            document.getElementById('prevHiringManager').innerText = manager;
+            document.getElementById('prevCompany').innerText = company;
+            document.getElementById('prevCompAddress').innerText = compAddress;
+            document.getElementById('prevSalutationName').innerText = manager;
+
+            document.getElementById('prevPara1').innerText = document.getElementById('inputPara1').value;
+            document.getElementById('prevPara2').innerText = document.getElementById('inputPara2').value;
+            document.getElementById('prevPara3').innerText = document.getElementById('inputPara3').value;
+        }
+    </script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>

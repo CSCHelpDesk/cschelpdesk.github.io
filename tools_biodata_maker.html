@@ -1,36 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Biodata Maker | CSC Desk</title>
-  <meta name="description" content="CSC Desk official utility tool.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/portal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marriage Biodata Maker | CSC Desk</title>
+<meta name="description" content="Design and print elegant Indian marriage biodatas in seconds.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 950px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .form-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .form-panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 6px;
+            margin-top: 15px;
+        }
+
+        .form-panel h3:first-of-type {
+            margin-top: 0;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"], input[type="file"], select, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 50px;
+        }
+
+        .btn-print {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .btn-print:hover {
+            background-color: #07513a;
+        }
+
+        /* Preview Panel (A4 Biodata Layout) */
+        .preview-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .biodata-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            background: #fffdf9;
+            border: 12px double #0b6e4f;
+            padding: 15mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            color: #222;
+            position: relative;
+        }
+
+        .bio-header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #0b6e4f;
+            padding-bottom: 10px;
+        }
+
+        .bio-god-heading {
+            font-size: 18px;
+            font-weight: bold;
+            color: #0b6e4f;
+            margin-bottom: 5px;
+        }
+
+        .bio-main-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0b6e4f;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bio-flex {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .bio-photo-box {
+            width: 120px;
+            height: 150px;
+            border: 2px solid #0b6e4f;
+            padding: 3px;
+            background: #fff;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .bio-photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bio-section-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #0b6e4f;
+            border-bottom: 1px solid #0b6e4f;
+            padding-bottom: 3px;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .bio-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .bio-table td {
+            padding: 5px 8px;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        .bio-table td.label-col {
+            font-weight: bold;
+            color: #444;
+            width: 35%;
+        }
+
+        .bio-table td.colon-col {
+            width: 3%;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .biodata-sheet, .biodata-sheet * {
+                visibility: visible;
+            }
+            .biodata-sheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                border: 8px double #0b6e4f;
+                box-shadow: none;
+                margin: 0;
+                padding: 12mm;
+                width: 210mm;
+                height: 297mm;
+            }
+            .form-panel, .header, .back-link, .btn-print {
+                display: none;
+            }
+        }
+    @media print{.biodata-sheet{height:auto!important}}.bio-section-title{margin-top:12px!important}.bio-table td{padding:3px 8px!important}
+</style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header id="site-header"></header>
-  <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Biodata Maker</h1>
-      <p>CSC Desk official utility tool.</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Documents</div><h1>Marriage Biodata Maker</h1><p>Design and print elegant Indian marriage biodatas in seconds.</p></div>
+
+        <div class="workspace">
+            <!-- Left Form Panel -->
+            <div class="form-panel">
+                <h3>1. Header & Photo</h3>
+                <div class="input-group">
+                    <label>Top Heading (Religious / Blessing)</label>
+                    <input type="text" id="godHeading" value="|| Shree Ganeshay Namah ||" oninput="updateBiodata()">
+                </div>
+                <div class="input-group">
+                    <label>Candidate Profile Photo</label>
+                    <input type="file" accept="image/*" onchange="loadPhoto(event)">
+                </div>
+
+                <h3>2. Personal Details</h3>
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" id="candName" value="Vikram Chouhan" oninput="updateBiodata()">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Date of Birth</label>
+                        <input type="text" id="dob" value="15 March 1998" oninput="updateBiodata()">
+                    </div>
+                    <div class="input-group">
+                        <label>Time of Birth</label>
+                        <input type="text" id="tob" value="08:30 AM" oninput="updateBiodata()">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Place of Birth</label>
+                        <input type="text" id="pob" value="Rohtak, Haryana" oninput="updateBiodata()">
+                    </div>
+                    <div class="input-group">
+                        <label>Height</label>
+                        <input type="text" id="height" value="5 ft 10 in" oninput="updateBiodata()">
+                    </div>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Complexion / Rashi</label>
+                        <input type="text" id="complexion" value="Fair / Leo (Simha)" oninput="updateBiodata()">
+                    </div>
+                    <div class="input-group">
+                        <label>Caste / Gotra</label>
+                        <input type="text" id="caste" value="Rajput / Kaushik" oninput="updateBiodata()">
+                    </div>
+                </div>
+
+                <h3>3. Education & Career</h3>
+                <div class="input-group">
+                    <label>Education / Degree</label>
+                    <input type="text" id="education" value="B.Tech in Computer Science" oninput="updateBiodata()">
+                </div>
+                <div class="input-group">
+                    <label>Occupation / Job</label>
+                    <input type="text" id="occupation" value="Software Engineer at IT Firm" oninput="updateBiodata()">
+                </div>
+                <div class="input-group">
+                    <label>Annual Income (Optional)</label>
+                    <input type="text" id="income" value="₹ 12 Lakhs P.A." oninput="updateBiodata()">
+                </div>
+
+                <h3>4. Family Background</h3>
+                <div class="input-group">
+                    <label>Father's Name & Occupation</label>
+                    <input type="text" id="fatherDetails" value="Shri Ramkishan Chouhan (Govt. Officer)" oninput="updateBiodata()">
+                </div>
+                <div class="input-group">
+                    <label>Mother's Name & Occupation</label>
+                    <input type="text" id="motherDetails" value="Smt. Sunita Devi (Homemaker)" oninput="updateBiodata()">
+                </div>
+                <div class="input-group">
+                    <label>Brothers / Sisters</label>
+                    <input type="text" id="siblings" value="1 Younger Brother (Studying)" oninput="updateBiodata()">
+                </div>
+
+                <h3>5. Contact Details</h3>
+                <div class="input-group">
+                    <label>Contact Phone / WhatsApp</label>
+                    <input type="text" id="contactPhone" value="+91 98765 43210" oninput="updateBiodata()">
+                </div>
+                <div class="input-group">
+                    <label>Residential Address</label>
+                    <textarea id="contactAddress" oninput="updateBiodata()">House No. 456, Sector 14, Rohtak, Haryana - 124001</textarea>
+                </div>
+
+                <h3>6. Hobbies and Languages</h3><div class="input-group"><label>Hobbies</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin-bottom:8px"><label style="font-weight:400"><input type="checkbox" name="hob" value="Reading" checked onchange="updateExtra()"> Reading</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Cooking" onchange="updateExtra()"> Cooking</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Travelling" checked onchange="updateExtra()"> Travelling</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Music" onchange="updateExtra()"> Music</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Dancing" onchange="updateExtra()"> Dancing</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Cricket" checked onchange="updateExtra()"> Cricket</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Yoga" onchange="updateExtra()"> Yoga</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Painting" onchange="updateExtra()"> Painting</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Gardening" onchange="updateExtra()"> Gardening</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Movies" onchange="updateExtra()"> Movies</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Photography" onchange="updateExtra()"> Photography</label><label style="font-weight:400"><input type="checkbox" name="hob" value="Swimming" onchange="updateExtra()"> Swimming</label></div><input type="text" id="hobOther" placeholder="Other hobbies (comma separated)" oninput="updateExtra()"></div><div class="input-group"><label>Languages known</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;margin-bottom:8px"><label style="font-weight:400"><input type="checkbox" name="lng" value="Hindi" checked onchange="updateExtra()"> Hindi</label><label style="font-weight:400"><input type="checkbox" name="lng" value="English" checked onchange="updateExtra()"> English</label><label style="font-weight:400"><input type="checkbox" name="lng" value="Punjabi" onchange="updateExtra()"> Punjabi</label><label style="font-weight:400"><input type="checkbox" name="lng" value="Haryanvi" onchange="updateExtra()"> Haryanvi</label><label style="font-weight:400"><input type="checkbox" name="lng" value="Urdu" onchange="updateExtra()"> Urdu</label><label style="font-weight:400"><input type="checkbox" name="lng" value="Sanskrit" onchange="updateExtra()"> Sanskrit</label></div><input type="text" id="lngOther" placeholder="Other languages" oninput="updateExtra()"></div><h3>7. Horoscope</h3><div class="input-row"><div class="input-group"><label>Manglik</label><select id="mangal" onchange="updateExtra()"><option>Non-Manglik</option><option>Manglik</option><option>Anshik Manglik</option><option value="">Not to show</option></select></div><div class="input-group"><label>Nakshatra</label><input type="text" id="nakshatra" value="Magha" oninput="updateExtra()"></div></div><h3>8. Partner Preferences</h3><div class="input-group"><label>Age range</label><input type="text" id="pAge" value="22 to 27 years" oninput="updateExtra()"></div><div class="input-group"><label>Education</label><input type="text" id="pEdu" value="Graduate or above" oninput="updateExtra()"></div><div class="input-group"><label>Occupation</label><input type="text" id="pOcc" value="Any" oninput="updateExtra()"></div><div class="input-group"><label>Preferred location</label><input type="text" id="pLoc" value="Haryana / Delhi NCR" oninput="updateExtra()"></div><div class="input-group"><label>Other expectations</label><input type="text" id="pNote" value="Family-oriented and well educated" oninput="updateExtra()"></div><button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Biodata as PDF</button>
+            </div>
+
+            <!-- Right Preview Panel -->
+            <div class="preview-panel">
+                <div id="biodataSheet" class="biodata-sheet">
+                    <div class="bio-header">
+                        <div class="bio-god-heading" id="prevGod">|| Shree Ganeshay Namah ||</div>
+                        <div class="bio-main-title">BIODATA</div>
+                    </div>
+
+                    <div class="bio-flex">
+                        <div style="flex: 1;">
+                            <div class="bio-section-title"><i class="fa-solid fa-user"></i> Personal Details</div>
+                            <table class="bio-table">
+                                <tr>
+                                    <td class="label-col">Name</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevName" style="font-weight:bold; color:#0b6e4f;">Vikram Chouhan</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Date of Birth</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevDob">15 March 1998</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Time of Birth</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevTob">08:30 AM</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Place of Birth</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevPob">Rohtak, Haryana</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Height</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevHeight">5 ft 10 in</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Complexion / Rashi</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevComplexion">Fair / Leo (Simha)</td>
+                                </tr>
+                                <tr>
+                                    <td class="label-col">Caste / Gotra</td>
+                                    <td class="colon-col">:</td>
+                                    <td id="prevCaste">Rajput / Kaushik</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Photo Box -->
+                        <div class="bio-photo-box">
+                            <img id="prevPhoto" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27120%27%20height%3D%27150%27%20viewBox%3D%270%200%20120%20150%27%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27%23eef2f0%27%2F%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20fill%3D%27%2358695f%27%20font-family%3D%27Arial%27%20font-size%3D%2712%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%3EPhoto%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Profile Photo">
+                        </div>
+                    </div>
+
+                    <div class="bio-section-title"><i class="fa-solid fa-graduation-cap"></i> Education & Career</div>
+                    <table class="bio-table">
+                        <tr>
+                            <td class="label-col">Educational Qualification</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevEdu">B.Tech in Computer Science</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Occupation / Profession</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevOcc">Software Engineer at IT Firm</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Annual Income</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevIncome">₹ 12 Lakhs P.A.</td>
+                        </tr>
+                    </table>
+
+                    <div class="bio-section-title"><i class="fa-solid fa-users"></i> Family Details</div>
+                    <table class="bio-table">
+                        <tr>
+                            <td class="label-col">Father's Name</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevFather">Shri Ramkishan Chouhan (Govt. Officer)</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Mother's Name</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevMother">Smt. Sunita Devi (Homemaker)</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Siblings</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevSiblings">1 Younger Brother (Studying)</td>
+                        </tr>
+                    </table>
+
+                    <div id="secHob"><div class="bio-section-title"><i class="fa-solid fa-heart"></i> Hobbies &amp; Languages</div><table class="bio-table"><tr><td class="label-col">Hobbies</td><td class="colon-col">:</td><td id="prevHob"></td></tr><tr><td class="label-col">Languages</td><td class="colon-col">:</td><td id="prevLng"></td></tr></table></div><div id="secHor"><div class="bio-section-title"><i class="fa-solid fa-star"></i> Horoscope</div><table class="bio-table"><tr><td class="label-col">Manglik</td><td class="colon-col">:</td><td id="prevMangal"></td></tr><tr><td class="label-col">Nakshatra</td><td class="colon-col">:</td><td id="prevNak"></td></tr></table></div><div id="secPart"><div class="bio-section-title"><i class="fa-solid fa-people-arrows"></i> Partner Preferences</div><table class="bio-table"><tr><td class="label-col">Age</td><td class="colon-col">:</td><td id="prevPAge"></td></tr><tr><td class="label-col">Education</td><td class="colon-col">:</td><td id="prevPEdu"></td></tr><tr><td class="label-col">Occupation</td><td class="colon-col">:</td><td id="prevPOcc"></td></tr><tr><td class="label-col">Location</td><td class="colon-col">:</td><td id="prevPLoc"></td></tr><tr><td class="label-col">Expectations</td><td class="colon-col">:</td><td id="prevPNote"></td></tr></table></div><div class="bio-section-title"><i class="fa-solid fa-address-book"></i> Contact Details</div>
+                    <table class="bio-table">
+                        <tr>
+                            <td class="label-col">Contact Number</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevPhone" style="font-weight:bold;">+91 98765 43210</td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">Residential Address</td>
+                            <td class="colon-col">:</td>
+                            <td id="prevAddress">House No. 456, Sector 14, Rohtak, Haryana - 124001</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Biodata Maker Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
-  </main>
-  <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        function loadPhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('prevPhoto').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateBiodata() {
+            document.getElementById('prevGod').innerText = document.getElementById('godHeading').value;
+            document.getElementById('prevName').innerText = document.getElementById('candName').value;
+            document.getElementById('prevDob').innerText = document.getElementById('dob').value;
+            document.getElementById('prevTob').innerText = document.getElementById('tob').value;
+            document.getElementById('prevPob').innerText = document.getElementById('pob').value;
+            document.getElementById('prevHeight').innerText = document.getElementById('height').value;
+            document.getElementById('prevComplexion').innerText = document.getElementById('complexion').value;
+            document.getElementById('prevCaste').innerText = document.getElementById('caste').value;
+
+            document.getElementById('prevEdu').innerText = document.getElementById('education').value;
+            document.getElementById('prevOcc').innerText = document.getElementById('occupation').value;
+            document.getElementById('prevIncome').innerText = document.getElementById('income').value;
+
+            document.getElementById('prevFather').innerText = document.getElementById('fatherDetails').value;
+            document.getElementById('prevMother').innerText = document.getElementById('motherDetails').value;
+            document.getElementById('prevSiblings').innerText = document.getElementById('siblings').value;
+
+            document.getElementById('prevPhone').innerText = document.getElementById('contactPhone').value;
+            document.getElementById('prevAddress').innerText = document.getElementById('contactAddress').value;
+        }
+
+        // Initialize preview
+        updateBiodata();
+    </script>
+<script src="assets/js/site.js">
+function updateExtra(){const g=id=>document.getElementById(id);const pick=n=>[].slice.call(document.querySelectorAll('input[name="'+n+'"]:checked')).map(x=>x.value);
+ const join=(a,o)=>a.concat((o||'').split(',').map(x=>x.trim()).filter(Boolean)).join(', ');
+ g('prevHob').textContent=join(pick('hob'),g('hobOther').value)||'-';g('prevLng').textContent=join(pick('lng'),g('lngOther').value)||'-';
+ g('prevMangal').textContent=g('mangal').value;g('prevNak').textContent=g('nakshatra').value||'-';g('secHor').style.display=(g('mangal').value||g('nakshatra').value)?'block':'none';
+ [['pAge','prevPAge'],['pEdu','prevPEdu'],['pOcc','prevPOcc'],['pLoc','prevPLoc'],['pNote','prevPNote']].forEach(([a,b])=>g(b).textContent=g(a).value||'-');
+ g('secPart').style.display=['pAge','pEdu','pOcc','pLoc','pNote'].some(a=>g(a).value.trim())?'block':'none';}
+updateExtra();
+</script>
 </body>
 </html>

@@ -1,36 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Id Card Print | CSC Desk</title>
-  <meta name="description" content="CSC Desk official utility tool.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/portal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Govt ID Card Print | CSC Desk</title>
+<meta name="description" content="Upload Front and Back ID scans to align them perfectly on an A4 sheet for accurate physical printing.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Control Panel */
+        .form-panel {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .form-panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 6px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        input[type="file"], select, input[type="number"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .btn-print {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .btn-print:hover {
+            background-color: #07513a;
+        }
+
+        /* Preview Panel (A4 Sheet Simulation) */
+        .preview-panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow-x: auto;
+        }
+
+        /* A4 Sheet Proportion Container (210mm x 297mm scaled) */
+        .a4-sheet {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            border: 1px solid #ccc;
+            padding: 15mm;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 10mm;
+        }
+
+        /* Card Container Row */
+        .card-row {
+            display: flex;
+            gap: 10mm;
+            align-items: center;
+        }
+
+        .card-preview-box {
+            width: 85.6mm;
+            height: 54mm;
+            border: 1px dashed #bbb;
+            background: #fafafa;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+
+        .card-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-label {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 9px;
+            color: #666;
+            background: rgba(255,255,255,0.8);
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .a4-sheet, .a4-sheet * {
+                visibility: visible;
+            }
+            .a4-sheet {
+                position: absolute;
+                left: 0;
+                top: 0;
+                border: none;
+                box-shadow: none;
+                margin: 0;
+                padding: 10mm;
+                width: 210mm;
+                height: 297mm;
+            }
+            .form-panel, .header, .back-link, .btn-print {
+                display: none;
+            }
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header id="site-header"></header>
-  <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Id Card Print</h1>
-      <p>CSC Desk official utility tool.</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Photo & ID print</div><h1>Govt ID Card Print Layout</h1><p>Upload Front and Back ID scans to align them perfectly on an A4 sheet for accurate physical printing.</p></div>
+
+        <div class="workspace">
+            <!-- Left Control Panel -->
+            <div class="form-panel">
+                <h3>1. Upload ID Scans</h3>
+                <div class="input-group">
+                    <label>Card Front Image</label>
+                    <input type="file" id="frontInput" accept="image/*" onchange="loadCardImage(event, 'front')">
+                </div>
+                <div class="input-group">
+                    <label>Card Back Image</label>
+                    <input type="file" id="backInput" accept="image/*" onchange="loadCardImage(event, 'back')">
+                </div>
+
+                <h3>2. Print Settings</h3>
+                <div class="input-group">
+                    <label>Card Standard Size</label>
+                    <select id="cardSize" onchange="updateCardDimensions()">
+                        <option value="standard">Standard PVC Card (85.6mm × 54mm)</option>
+                        <option value="compact">Compact ID (80mm × 50mm)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Border Line around Cards</label>
+                    <select id="borderStyle" onchange="updateBorder()">
+                        <option value="dashed">Dashed Cutting Border</option>
+                        <option value="solid">Solid Border</option>
+                        <option value="none">No Border</option>
+                    </select>
+                </div>
+
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print A4 Sheet</button>
+            </div>
+
+            <!-- Right Preview Panel (A4 Sheet) -->
+            <div class="preview-panel">
+                <div id="a4Sheet" class="a4-sheet">
+                    <div style="font-size: 12px; font-weight: bold; color: #444; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-bottom: 5px;">
+                        CSC Desk - ID Card Print Preview (A4 Sheet)
+                    </div>
+                    
+                    <!-- Row 1: Front and Back -->
+                    <div class="card-row">
+                        <div id="frontBox" class="card-preview-box">
+                            <span class="card-label">FRONT</span>
+                            <img id="prevFront" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27324%27%20height%3D%27204%27%20viewBox%3D%270%200%20324%20204%27%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27%23eef2f0%27%2F%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20fill%3D%27%2358695f%27%20font-family%3D%27Arial%27%20font-size%3D%2723%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%3EUpload%20Front%20Card%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Front ID">
+                        </div>
+                        <div id="backBox" class="card-preview-box">
+                            <span class="card-label">BACK</span>
+                            <img id="prevBack" src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27324%27%20height%3D%27204%27%20viewBox%3D%270%200%20324%20204%27%3E%3Crect%20width%3D%27100%25%27%20height%3D%27100%25%27%20fill%3D%27%23eef2f0%27%2F%3E%3Ctext%20x%3D%2750%25%27%20y%3D%2750%25%27%20fill%3D%27%2358695f%27%20font-family%3D%27Arial%27%20font-size%3D%2723%27%20text-anchor%3D%27middle%27%20dominant-baseline%3D%27middle%27%3EUpload%20Back%20Card%3C%2Ftext%3E%3C%2Fsvg%3E" alt="Back ID">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Id Card Print Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
-  </main>
-  <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        function loadCardImage(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (type === 'front') {
+                    document.getElementById('prevFront').src = e.target.result;
+                } else {
+                    document.getElementById('prevBack').src = e.target.result;
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateCardDimensions() {
+            const size = document.getElementById('cardSize').value;
+            const boxes = document.querySelectorAll('.card-preview-box');
+            
+            boxes.forEach(box => {
+                if (size === 'compact') {
+                    box.style.width = '80mm';
+                    box.style.height = '50mm';
+                } else {
+                    box.style.width = '85.6mm';
+                    box.style.height = '54mm';
+                }
+            });
+        }
+
+        function updateBorder() {
+            const style = document.getElementById('borderStyle').value;
+            const boxes = document.querySelectorAll('.card-preview-box');
+
+            boxes.forEach(box => {
+                if (style === 'dashed') {
+                    box.style.border = '1px dashed #bbb';
+                } else if (style === 'solid') {
+                    box.style.border = '1px solid #333';
+                } else {
+                    box.style.border = 'none';
+                }
+            });
+        }
+    </script>
+<script src="assets/js/site.js"></script>
+<script src="assets/js/cardfit.js"></script>
 </body>
 </html>

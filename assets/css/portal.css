@@ -123,3 +123,5 @@ div.tool.is-soon{opacity:.72}
 .note{font-size:.85rem;color:var(--muted)}
 .field input[type=file]{padding:8px;background:var(--surface)}
 .preview-img{max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm);background:#fff}
+
+@media print{.split{display:block!important}.split>section{overflow:visible!important}.paper{border:0!important;border-radius:0!important;box-shadow:none!important}}

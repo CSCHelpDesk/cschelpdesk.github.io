@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gold and silver value calculator | CSC Desk</title><meta name="description" content="Work out the value of gold or silver jewellery from the day's rate that you type, with making charge and GST.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style></style></head><body>
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
+<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Utilities</div><h1>Gold and silver value calculator</h1><p>Work out the value of gold or silver jewellery from the day's rate that you type, with making charge and GST.</p></div>
+<div class="split"><section class="panel"><div class="row2"><div class="field"><label for="mt">Metal</label><select id="mt"><option value="gold">Gold</option><option value="silver">Silver</option></select></div><div class="field"><label for="pu">Purity</label><select id="pu"></select></div></div>
+<div class="row2"><div class="field"><label for="wt">Weight</label><input type="number" id="wt" value="10" min="0" step="0.01"></div><div class="field"><label for="wu">Unit</label><select id="wu"><option value="1">Gram</option><option value="11.6638">Tola (11.66 g)</option></select></div></div>
+<div class="row2"><div class="field"><label for="rt" id="rl">Today's rate for pure gold (Rs.)</label><input type="number" id="rt" min="0" step="0.01" placeholder="Type today's rate"></div><div class="field"><label for="ru">Rate is per</label><select id="ru"></select></div></div>
+<div class="row2"><div class="field"><label for="mk">Making charge</label><input type="number" id="mk" value="0" min="0" step="0.01"></div><div class="field"><label for="mu">Making charge type</label><select id="mu"><option value="pct">% of metal value</option><option value="g">Rs. per gram</option></select></div></div>
+<div class="field"><label for="gs">GST (%)</label><input type="number" id="gs" value="3" min="0" step="0.01"></div>
+<p class="note">This tool does <b>not</b> fetch live rates. Type the rate from your jeweller or a source you trust. Check the current GST and making charge rules before billing a customer.</p></section>
+<section class="panel"><h2>Value</h2><table style="width:100%;border-collapse:collapse" id="out"></table></section></div></main><footer id="site-footer"></footer>
+<script src="assets/js/site.js"></script><script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const PU={gold:[['24K (99.9%)',1],['22K',22/24],['21K',21/24],['18K',18/24],['14K',14/24]],silver:[['Pure (999)',.999],['Sterling (925)',.925],['800',.8]]};
+const RU={gold:[['10 grams',10],['1 gram',1]],silver:[['1 kg',1000],['10 grams',10],['1 gram',1]]};
+const inr=n=>'Rs. '+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+function setup(){const m=$('mt').value;$('pu').innerHTML=PU[m].map((p,i)=>'<option value="'+p[1]+'">'+p[0]+'</option>').join('');$('ru').innerHTML=RU[m].map(r=>'<option value="'+r[1]+'">'+r[0]+'</option>').join('');$('rl').textContent="Today's rate for pure "+m+" (Rs.)";calc();}
+function calc(){const g=(+$('wt').value||0)*(+$('wu').value),pur=+$('pu').value,rate=(+$('rt').value||0)/(+$('ru').value),val=g*pur*rate;
+ const mk=$('mu').value==='pct'?val*(+$('mk').value||0)/100:g*(+$('mk').value||0),gst=(val+mk)*(+$('gs').value||0)/100,tot=val+mk+gst;
+ const R=(a,b,bold)=>'<tr style="border-bottom:1px solid var(--line)"><td style="padding:8px 4px">'+a+'</td><td style="padding:8px 4px;text-align:right;'+(bold?'font-weight:800;font-size:1.15rem':'')+'">'+b+'</td></tr>';
+ $('out').innerHTML=R('Weight',g.toFixed(3)+' g')+R('Pure metal weight',(g*pur).toFixed(3)+' g')+R('Metal value',inr(val))+R('Making charge',inr(mk))+R('GST',inr(gst))+R('Total',inr(tot),true);}
+$('mt').onchange=setup;document.querySelectorAll('.panel input,.panel select').forEach(e=>{if(e.id!=='mt')e.oninput=calc;e.onchange=e.id==='mt'?setup:calc;});setup();</script></body></html>

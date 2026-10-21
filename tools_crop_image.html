@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Crop image to size | CSC Desk</title><meta name="description" content="Crop a photo to the exact pixel size a form needs. Drag, zoom, and download.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style></style></head><body>
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
+<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>Crop image to size</h1><p>Crop a photo to the exact pixel size a form needs. Drag, zoom, and download.</p></div>
+<div class="split"><section class="panel"><div class="field"><label for="f">Choose image</label><input type="file" id="f" accept="image/*"></div>
+<div class="chips" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px"><button class="chip" data-w="350" data-h="450" type="button">Passport 35x45</button><button class="chip" data-w="400" data-h="400" type="button">Square</button><button class="chip" data-w="300" data-h="400" type="button">3:4 ID</button><button class="chip" data-w="400" data-h="200" type="button">Signature wide</button><button class="chip" data-w="800" data-h="1000" type="button">4:5</button></div>
+<div class="row2"><div class="field"><label for="w">Width (px)</label><input type="number" id="w" value="350" min="20"></div><div class="field"><label for="h">Height (px)</label><input type="number" id="h" value="450" min="20"></div></div>
+<div class="field"><label>Zoom: <span id="zv">100</span>%</label><input type="range" id="z" min="100" max="400" value="100"></div>
+<div class="field"><label for="kb">Max size in KB (0 = no limit)</label><input type="number" id="kb" value="0" min="0"></div>
+<p class="note">Drag the picture to move it inside the frame. Scroll or use Zoom to resize.</p><a class="btn" id="dl" download="cropped.jpg"><i class="fa-solid fa-download"></i> Download JPG</a></section>
+<section class="panel" style="text-align:center"><canvas id="cv" style="max-width:100%;border:1px solid var(--line);touch-action:none;cursor:grab;background:#fff"></canvas><p class="result" id="inf" style="margin-top:10px"></p></section></div></main><footer id="site-footer"></footer>
+<script src="assets/js/site.js"></script><script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let img=null,z=1,ox=0,oy=0;const cv=$('cv'),cx=cv.getContext('2d');
+const W=()=>Math.max(20,+$('w').value||350),H=()=>Math.max(20,+$('h').value||450);
+function clamp(cw,ch){const b=Math.max(cw/img.width,ch/img.height)*z,mx=(img.width*b-cw)/(2*cw),my=(img.height*b-ch)/(2*ch);ox=Math.max(-mx,Math.min(mx,ox));oy=Math.max(-my,Math.min(my,oy));}
+function paint(c,cw,ch){c.fillStyle='#fff';c.fillRect(0,0,cw,ch);if(!img)return;clamp(cw,ch);const b=Math.max(cw/img.width,ch/img.height)*z,w=img.width*b,h=img.height*b;c.drawImage(img,(cw-w)/2+ox*cw,(ch-h)/2+oy*ch,w,h);}
+function draw(){const w=W(),h=H(),s=Math.min(360/w,420/h,1);cv.width=Math.round(w*s);cv.height=Math.round(h*s);paint(cx,cv.width,cv.height);out();}
+function out(){if(!img){$('inf').textContent='Choose an image to start.';return;}const o=document.createElement('canvas');o.width=W();o.height=H();paint(o.getContext('2d'),o.width,o.height);
+ const kb=+$('kb').value||0;let q=.95,u=o.toDataURL('image/jpeg',q);while(kb&&u.length*.75/1024>kb&&q>.1){q-=.05;u=o.toDataURL('image/jpeg',q);}
+ $('dl').href=u;$('inf').textContent=o.width+' x '+o.height+' px | '+(u.length*.75/1024).toFixed(1)+' KB';}
+$('f').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const i=new Image();i.onload=()=>{img=i;z=1;ox=oy=0;$('z').value=100;$('zv').textContent=100;draw();};i.src=ev.target.result;};r.readAsDataURL(f);};
+document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{$('w').value=b.dataset.w;$('h').value=b.dataset.h;ox=oy=0;draw();});
+['w','h','kb'].forEach(k=>$(k).oninput=draw);$('z').oninput=()=>{z=$('z').value/100;$('zv').textContent=$('z').value;draw();};
+let d=null;cv.onpointerdown=e=>{d={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);cv.style.cursor='grabbing';};
+cv.onpointermove=e=>{if(!d||!img)return;ox+=(e.clientX-d.x)/cv.clientWidth;oy+=(e.clientY-d.y)/cv.clientHeight;d={x:e.clientX,y:e.clientY};paint(cx,cv.width,cv.height);out();};
+cv.onpointerup=cv.onpointercancel=()=>{d=null;cv.style.cursor='grab';};
+cv.addEventListener('wheel',e=>{e.preventDefault();z=Math.min(4,Math.max(1,z*(e.deltaY<0?1.06:.94)));$('z').value=Math.round(z*100);$('zv').textContent=Math.round(z*100);draw();},{passive:false});draw();</script></body></html>

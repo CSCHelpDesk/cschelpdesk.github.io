@@ -6,148 +6,31 @@
   <title>CSC Desk: Free Tools for CSC VLEs and Cyber Cafes</title>
   <meta name="description" content="Free printable tools for CSC operators and cyber cafes: resume, biodata, rent agreement, salary slip, photo sheets, receipts and quick links to official portals.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/portal.css">
-  <style>
-    .portal-workspace {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 24px;
-      align-items: start;
-      margin-top: 20px;
-    }
-    .categories-sidebar {
-      background: var(--surface, #ffffff);
-      border: 1px solid var(--line, #d5dce4);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.05));
-      position: sticky;
-      top: 20px;
-    }
-    .categories-sidebar h3 {
-      margin-top: 0;
-      font-size: 1.05rem;
-      color: var(--brand, #0b5c3b);
-      border-bottom: 2px solid var(--brand, #0b5c3b);
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .category-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .category-list li {
-      margin-bottom: 6px;
-    }
-    .category-list a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      color: var(--text, #1b2430);
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: background 0.2s, color 0.2s;
-    }
-    .category-list a:hover {
-      background: var(--soft, #e3f3ea);
-      color: var(--brand, #0b5c3b);
-    }
-    .category-list span.count {
-      background: var(--line, #d5dce4);
-      color: var(--muted, #5d6b7a);
-      border-radius: 12px;
-      padding: 2px 8px;
-      font-size: 0.75rem;
-    }
-    @media (max-width: 950px) {
-      .portal-workspace {
-        grid-template-columns: 1fr;
-      }
-      .categories-sidebar {
-        position: static;
-        margin-top: 20px;
-      }
-    }
-  </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header id="site-header"></header>
-  
   <main id="main">
     <section class="hero hero-card">
       <h1>Every counter job, one desk.</h1>
-      <p>Print-ready documents, PDF tools, photo studios, ID card creators, and verified portal quick links for CSC VLEs.</p>
-      <label class="search" for="tool-search">
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        <input type="search" id="tool-search" placeholder="Search 58+ tools: question paper, PVC ID, BG remover, resume..." autocomplete="off">
-      </label>
-      <div class="stats">
-        <span><b>58 Total Templates & Tools Active</b></span>
-        <span>Opens on any mobile, tablet or PC</span>
-      </div>
+      <p>Print-ready documents, photo and ID sheets, and calculators for CSC operators. Search below or pick a category.</p>
+      <label class="search" for="tool-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input type="search" id="tool-search" placeholder="Try: resume, passport photo, receipt" autocomplete="off"></label>
+      <div class="stats"><span><b id="stat-count"></b></span><span>Opens on any phone or PC</span></div>
     </section>
 
-    <div class="portal-workspace">
-      <div class="main-column">
-        <h2 class="section-title" id="tools"><i class="fa-solid fa-toolbox" aria-hidden="true"></i> Tools & Applications</h2>
-        <div class="cats" id="cats" role="group" aria-label="Filter by category"></div>
-        <div class="tool-list" id="tool-list" aria-live="polite"></div>
+    <h2 class="section-title" id="tools"><i class="fa-solid fa-toolbox" aria-hidden="true"></i>Tools</h2>
+    <div class="cats" id="cats" role="group" aria-label="Filter by category"></div>
+    <div class="tool-list" id="tool-list" aria-live="polite"></div>
+    <noscript><p class="empty">Please enable JavaScript to see the tools list.</p></noscript>
 
-        <h2 class="section-title" id="links" style="margin-top: 36px;"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Official Portal Quick Links</h2>
-        <div class="quick-grid" id="quick-links">
-          <a href="https://agent.mobisafar.com/MOBISAFAR/Login.aspx" target="_blank" rel="noopener" class="quick-card">
-            <i class="fa-solid fa-wallet" style="color: #0b5c3b;"></i>
-            <div>
-              <strong>Mobisafar Agent Portal</strong>
-              <span>AEPS & Banking Services Login</span>
-            </div>
-          </a>
-          <a href="https://digipaylite.in/" target="_blank" rel="noopener" class="quick-card">
-            <i class="fa-solid fa-mobile-screen-button" style="color: #0b5c3b;"></i>
-            <div>
-              <strong>CSC DigiPay Lite</strong>
-              <span>Micro ATM & Merchant Banking</span>
-            </div>
-          </a>
-          <a href="https://connect.csc.gov.in/account/authorize?response_type=code&client_id=0f8ca686-5a31-46b8-bb51-d9834ba9fa9d&redirect_uri=https%3A%2F%2Fdigitalseva.csc.gov.in%2Fauth%2Fcallback%2F&state=45937" target="_blank" rel="noopener" class="quick-card">
-            <i class="fa-solid fa-id-card-clip" style="color: #0b5c3b;"></i>
-            <div>
-              <strong>CSC Digital Seva Connect</strong>
-              <span>Official Auth & Citizen Services</span>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <aside class="categories-sidebar" aria-label="Categories Section">
-        <h3><i class="fa-solid fa-layer-group"></i> Categories</h3>
-        <ul class="category-list">
-          <li><a href="#tools"><span>AI & Image Studios</span><span class="count">7</span></a></li>
-          <li><a href="#tools"><span>PDF Utilities & Converters</span><span class="count">6</span></a></li>
-          <li><a href="#tools"><span>ID Card & PVC Makers</span><span class="count">5</span></a></li>
-          <li><a href="#tools"><span>Education & Exam Tools</span><span class="count">4</span></a></li>
-          <li><a href="#tools"><span>Govt Applications & Affidavits</span><span class="count">20</span></a></li>
-          <li><a href="#tools"><span>Resumes & Biodata Makers</span><span class="count">3</span></a></li>
-          <li><a href="#tools"><span>Agreements & Contracts</span><span class="count">3</span></a></li>
-          <li><a href="#tools"><span>Receipts & Financial Slips</span><span class="count">4</span></a></li>
-          <li><a href="#tools"><span>WhatsApp & Quick Utilities</span><span class="count">3</span></a></li>
-        </ul>
-      </aside>
-    </div>
+    <h2 class="section-title" id="links"><i class="fa-solid fa-bolt" aria-hidden="true"></i>Official portals</h2>
+    <div class="quick-grid" id="quick-links"></div>
   </main>
-
   <footer id="site-footer"></footer>
   <script src="assets/js/site.js"></script>
 </body>

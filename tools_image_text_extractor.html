@@ -1,36 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Image Text Extractor | CSC Desk</title>
-  <meta name="description" content="CSC Desk official utility tool.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/portal.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Text Extractor (OCR) | CSC Desk</title>
+<meta name="description" content="Extract editable text from scanned documents, certificates, and images instantly in your browser.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Tesseract.js OCR Library CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>
+
+
+
+
+
+
+
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Panels */
+        .panel {
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel h3 {
+            font-size: 15px;
+            color: #0b6e4f;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 5px;
+        }
+
+        input[type="file"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .image-preview-box {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            background: #fafafa;
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .image-preview-box img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 4px;
+        }
+
+        textarea.output-text {
+            width: 100%;
+            height: 280px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+            resize: vertical;
+            background: #fafafa;
+        }
+
+        .btn-action {
+            background-color: #0b6e4f;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-action:hover {
+            background-color: #07513a;
+        }
+
+        .btn-success {
+            background-color: #0b6e4f;
+        }
+
+        .btn-success:hover {
+            background-color: #07513a;
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+    </style>
+<style>
+/* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
+@page{size:A4;margin:0}
+@media print{body{min-height:0}.sheet-a4{padding:4mm!important;gap:2mm 3mm!important}}
+</style>
+<style id="pageStyle"></style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header id="site-header"></header>
-  <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Image Text Extractor</h1>
-      <p>CSC Desk official utility tool.</p>
+<a class="skip-link" href="#main">Skip to content</a>
+<header id="site-header"></header>
+<main id="main">
+
+    <div class="container">
+        <div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>Image Text Extractor (OCR)</h1><p>Extract editable text from scanned documents, certificates, and images instantly in your browser.</p></div>
+
+        <div class="workspace">
+            <!-- Left Panel: Upload & Preview -->
+            <div class="panel">
+                <h3>1. Upload Image</h3>
+                <div class="input-group">
+                    <label>Select Image (JPG / PNG)</label>
+                    <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)">
+                </div>
+
+                <div class="input-group">
+                    <label>OCR Language</label>
+                    <select id="ocrLang">
+                        <option value="eng">English</option>
+                        <option value="hin">Hindi</option>
+                        <option value="eng+hin">English + Hindi</option>
+                    </select>
+                </div>
+
+                <div class="image-preview-box" id="previewContainer">
+                    <span style="color: #888; font-size: 13px;"><i class="fa-regular fa-image" style="font-size: 24px; display:block; margin-bottom:5px;"></i> Image preview will appear here</span>
+                </div>
+
+                <button class="btn-action" id="extractBtn" onclick="extractText()" style="display: none;"><i class="fa-solid fa-wand-magic-sparkles"></i> Extract Text</button>
+                <div id="statusMsg" class="status-text"></div>
+            </div>
+
+            <!-- Right Panel: Extracted Output -->
+            <div class="panel">
+                <h3>2. Extracted Text Output</h3>
+                <div class="input-group" style="flex: 1;">
+                    <label>Editable Result</label>
+                    <textarea id="outputText" class="output-text" placeholder="Extracted text will appear here..."></textarea>
+                </div>
+
+                <button class="btn-action btn-success" onclick="copyText()"><i class="fa-solid fa-copy"></i> Copy to Clipboard</button>
+            </div>
+        </div>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Image Text Extractor Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
-  </main>
-  <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+
+    </main>
+<footer id="site-footer"></footer>
+<script>
+        let selectedFile = null;
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            selectedFile = file;
+            const container = document.getElementById('previewContainer');
+            container.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Uploaded Image">`;
+            document.getElementById('extractBtn').style.display = 'block';
+            document.getElementById('outputText').value = '';
+        }
+
+        async function extractText() {
+            if (!selectedFile) {
+                alert('Please upload an image first.');
+                return;
+            }
+
+            const lang = document.getElementById('ocrLang').value;
+            const statusMsg = document.getElementById('statusMsg');
+            const outputText = document.getElementById('outputText');
+
+            statusMsg.innerText = 'Processing OCR... Please wait.';
+            outputText.value = '';
+
+            try {
+                const ret = await Tesseract.recognize(selectedFile, lang, { logger: m => { if (m.status === 'recognizing text') statusMsg.innerText = 'Reading text... ' + Math.round(m.progress * 100) + '%'; } });
+                outputText.value = ret.data.text;
+                statusMsg.innerText = 'Text extraction completed.';
+            } catch (error) {
+                console.error(error);
+                statusMsg.innerText = 'Error during text extraction. Please try another image.';
+            }
+        }
+
+        function copyText() {
+            const text = document.getElementById('outputText');
+            text.select();
+            text.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(text.value);
+            alert('Extracted text copied to clipboard!');
+        }
+    </script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>

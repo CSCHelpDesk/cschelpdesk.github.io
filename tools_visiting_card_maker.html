@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Visiting card maker | CSC Desk</title><meta name="description" content="Make visiting cards for your shop and print 10 on one A4 sheet.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>@page{size:A4;margin:0}.fld textarea,.field textarea{font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);width:100%}.vsheet{width:210mm;min-height:297mm;padding:8mm 15mm;display:grid;grid-template-columns:repeat(2,90mm);grid-auto-rows:50mm;justify-content:center;align-content:start;--lc:#0b6e4f}
-.vc{width:90mm;height:50mm;border:1px dashed #bbb;position:relative;overflow:hidden;display:flex;font-size:8.5pt;color:#222;background:#fff;line-height:1.35}
-.vc .band{width:7mm;background:var(--lc);flex:none}.vc.b .band{display:none}.vc.b::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3mm;background:var(--lc)}
-.vc .body{flex:1;padding:4mm 4mm 3mm 5mm;display:flex;flex-direction:column;min-width:0}.vc.b .body{align-items:center;text-align:center;padding-bottom:5mm}
-.vc .nm{font-size:13pt;font-weight:800;color:var(--lc)}.vc .ds{color:#444}.vc .biz{margin-top:1.5mm;font-weight:700;font-size:10pt}.vc .ln{margin-top:auto;overflow-wrap:anywhere}
-.vc .ln i{width:3.4mm;color:var(--lc);margin-right:1.2mm;font-size:7pt}.vc .lg{position:absolute;right:3mm;top:3mm;width:15mm;height:15mm;object-fit:contain}</style></head><body>
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
-<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / CSC counter</div><h1>Visiting card maker</h1><p>Make visiting cards for your shop and print 10 on one A4 sheet.</p></div>
-<div class="split"><section class="panel no-print"><div class="field"><label for="nm">Name</label><input type="text" id="nm" value="Rajesh Kumar" ></div><div class="field"><label for="ds">Designation</label><input type="text" id="ds" value="Proprietor" ></div><div class="field"><label for="biz">Business name</label><input type="text" id="biz" value="Your CSC Centre" ></div><div class="row2"><div class="field"><label for="ph">Phone</label><input type="text" id="ph" value="98765 00000" ></div><div class="field"><label for="ph2">Second phone (optional)</label><input type="text" id="ph2" value="" ></div></div><div class="field"><label for="em">Email (optional)</label><input type="text" id="em" value="" ></div><div class="field"><label for="ad">Address</label><input type="text" id="ad" value="Main Market, Your Town, Haryana" ></div><div class="field"><label for="web">Website or line (optional)</label><input type="text" id="web" value="" ></div><div class="row2"><div class="field"><label for="co">Colour</label><select id="co"><option value="#0b6e4f">Green</option><option value="#1d4ed8">Blue</option><option value="#6d3fc0">Purple</option><option value="#c2255c">Rose</option><option value="#111827">Black</option></select></div><div class="field"><label for="st">Style</label><select id="st"><option value="a">Side band</option><option value="b">Centred</option></select></div></div>
-<div class="field"><label for="lg">Logo (optional)</label><input type="file" id="lg" accept="image/*"></div><button class="btn" id="pr" type="button"><i class="fa-solid fa-print"></i> Print</button><p class="note">Prints 10 cards (90 x 50 mm) on one A4. Cut along the dashed lines.</p></section><section style="overflow-x:auto"><div class="paper vsheet" id="sheet"></div></section></div></main><footer id="site-footer"></footer>
-<script src="assets/js/site.js"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const today=()=>{const t=new Date();return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');};
-const dmy=v=>v?v.split('-').reverse().join('/'):'';
-const readImg=(file,cb)=>{if(!file)return;const r=new FileReader();r.onload=e=>cb(e.target.result);r.readAsDataURL(file);};
-let logo='';
-function card(){const L=(i,v)=>v?'<div><i class="fa-solid fa-'+i+'"></i>'+esc(v)+'</div>':'';
- return '<div class="vc '+$('st').value+'"><div class="band"></div><div class="body"><div class="nm">'+esc($('nm').value)+'</div><div class="ds">'+esc($('ds').value)+'</div><div class="biz">'+esc($('biz').value)+'</div><div class="ln">'+L('phone',[$('ph').value,$('ph2').value].filter(Boolean).join(' / '))+L('envelope',$('em').value)+L('location-dot',$('ad').value)+L('globe',$('web').value)+'</div></div>'+(logo?'<img class="lg" src="'+logo+'" alt="">':'')+'</div>';}
-function draw(){let h='';for(let i=0;i<10;i++)h+=card();$('sheet').innerHTML=h;$('sheet').style.setProperty('--lc',$('co').value);}
-document.querySelectorAll('.panel input,.panel select').forEach(e=>{if(e.type!=='file')e.oninput=draw;});$('lg').onchange=e=>readImg(e.target.files[0],u=>{logo=u;draw();});$('pr').onclick=()=>window.print();draw();</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visiting Card Maker | CSC Desk</title>
+  <meta name="description" content="Design a visiting card and print 10 per A4 sheet.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Visiting Card Maker</div>
+      <h1>Visiting Card Maker</h1>
+      <p>Design a visiting card and print 10 per A4 sheet.</p>
+    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/tools-docs.js"></script>
+  <script>CSC.mount('visiting_card_maker');</script>
+</body>
+</html>

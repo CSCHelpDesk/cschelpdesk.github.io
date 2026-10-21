@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Student ID Card Creator | CSC Desk</title>
-  <meta name="description" content="Create and print professional school and college ID cards.">
+  <meta name="description" content="Create school and college ID cards and print many per sheet.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,23 +14,16 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header id="site-header"></header>
   <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Student ID Card Creator</div>
       <h1>Student ID Card Creator</h1>
-      <p>Create and print professional school and college ID cards.</p>
+      <p>Create school and college ID cards and print many per sheet.</p>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Student ID Card Creator Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
   </main>
   <footer id="site-footer"></footer>
   <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+  <script src="assets/js/tools-docs.js"></script>
+  <script>CSC.mount('student_id_creator');</script>
 </body>
 </html>

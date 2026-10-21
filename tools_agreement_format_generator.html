@@ -188,11 +188,7 @@
                 display: none;
             }
         }
-    .photo-row{display:flex;justify-content:space-between;margin-top:26px}.pbox{text-align:center;font-size:10px}.pimg{width:30mm;height:38mm;border:1px dashed #888;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:10px;color:#888;margin-bottom:2px}.pimg img{width:100%;height:100%;object-fit:cover}
-.annex{break-before:page;page-break-before:always;padding-top:4mm}.annex h4{margin:10px 0 6px;font-size:13px}.annex-grid{display:grid;grid-template-columns:repeat(2,85.6mm);gap:6mm;justify-content:space-between}.slotfig{margin:0;font-size:11px;text-align:center}
-.annex .card-preview-box{width:85.6mm;height:54mm;border:1px dashed #999;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;background:#fafafa;border-radius:3px;font-size:11px;color:#888}.annex .card-preview-box img{width:100%;height:100%;object-fit:cover}
-@media print{.agreement-sheet{height:auto!important}}
-</style>
+    </style>
 <style>
 /* CSC Desk skin: portal chrome adapts to light/dark, tool cards stay paper-white */
 @page{size:A4;margin:0}
@@ -272,7 +268,18 @@
                     <input type="number" id="tenureMonths" value="11" oninput="updateAgreement()">
                 </div>
 
-                <h3>5. Photos, Aadhaar and ID Proofs</h3><div class="input-row"><div class="input-group"><label>Owner Aadhaar No. (optional)</label><input type="text" id="p1Aad" oninput="updateExtra()"></div><div class="input-group"><label>Tenant Aadhaar No. (optional)</label><input type="text" id="p2Aad" oninput="updateExtra()"></div></div><div class="input-row"><div class="input-group"><label>Owner photo</label><input type="file" accept="image/*" onchange="loadImg(event,'prevPh1')"></div><div class="input-group"><label>Tenant photo</label><input type="file" accept="image/*" onchange="loadImg(event,'prevPh2')"></div></div><div class="input-group"><label><input type="checkbox" id="annexOn" checked onchange="updateExtra()"> Add ID proof page (Annexure)</label></div><div class="input-group"><label><input type="checkbox" id="ownOn" onchange="updateExtra()"> Include owner ID proofs</label></div><div class="input-row"><div class="input-group"><label>Tenant ID 1 type</label><select id="ty_t1" onchange="updateExtra()"><option selected>Aadhaar Card</option><option>PAN Card</option><option>Voter ID</option><option>Driving Licence</option><option>Passport</option><option>Other ID</option></select></div><div class="input-group"><label>Image</label><input type="file" accept="image/*" onchange="loadImg(event,'img_t1')"></div></div><div class="input-row"><div class="input-group"><label>Tenant ID 2 type</label><select id="ty_t2" onchange="updateExtra()"><option>Aadhaar Card</option><option selected>PAN Card</option><option>Voter ID</option><option>Driving Licence</option><option>Passport</option><option>Other ID</option></select></div><div class="input-group"><label>Image</label><input type="file" accept="image/*" onchange="loadImg(event,'img_t2')"></div></div><div class="input-row"><div class="input-group"><label>Owner ID 1 type</label><select id="ty_o1" onchange="updateExtra()"><option selected>Aadhaar Card</option><option>PAN Card</option><option>Voter ID</option><option>Driving Licence</option><option>Passport</option><option>Other ID</option></select></div><div class="input-group"><label>Image</label><input type="file" accept="image/*" onchange="loadImg(event,'img_o1')"></div></div><div class="input-row"><div class="input-group"><label>Owner ID 2 type</label><select id="ty_o2" onchange="updateExtra()"><option>Aadhaar Card</option><option selected>PAN Card</option><option>Voter ID</option><option>Driving Licence</option><option>Passport</option><option>Other ID</option></select></div><div class="input-group"><label>Image</label><input type="file" accept="image/*" onchange="loadImg(event,'img_o2')"></div></div><p style="font-size:11px;color:#5d6b7a">After uploading, click an ID image on the page to drag and zoom it. Do not share Aadhaar copies with anyone who does not need them.</p><button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Agreement as PDF</button>
+                <h3>5. Tenant photo and ID proofs</h3>
+                <div class="input-group"><label>Tenant photo</label><input type="file" accept="image/*" onchange="loadAnn(event,'tenantPhoto')"></div>
+<div class="input-group"><label>ID proof 1 - type</label><select id="idType1" onchange="updateAnnexure()"><option>Aadhaar Card</option><option>PAN Card</option><option>Voter ID</option><option>Driving Licence</option><option>Passport</option><option>Ration Card</option></select></div>
+                <div class="input-group"><label>ID proof 1 - number</label><input type="text" id="idNo1" oninput="updateAnnexure()"></div>
+                <div class="input-group"><label>ID proof 1 - scan / photo</label><input type="file" accept="image/*" onchange="loadAnn(event,'idImg1')"></div>
+<div class="input-group"><label>ID proof 2 - type</label><select id="idType2" onchange="updateAnnexure()"><option>PAN Card</option><option>Aadhaar Card</option><option>PAN Card</option><option>Voter ID</option><option>Driving Licence</option><option>Passport</option><option>Ration Card</option></select></div>
+                <div class="input-group"><label>ID proof 2 - number</label><input type="text" id="idNo2" oninput="updateAnnexure()"></div>
+                <div class="input-group"><label>ID proof 2 - scan / photo</label><input type="file" accept="image/*" onchange="loadAnn(event,'idImg2')"></div>
+
+                <div class="input-group"><label><input type="checkbox" id="showAnn" checked onchange="updateAnnexure()" style="width:auto"> Print annexure page (photo + ID proofs)</label></div>
+
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Agreement as PDF</button>
             </div>
 
             <!-- Right Preview Panel -->
@@ -286,7 +293,7 @@
 
                     <div class="doc-section">
                         <strong>FIRST PARTY (Landlord/Owner):</strong><br>
-                        <strong><span id="prevP1Name">Suresh Chand</span></strong>, S/o <strong><span id="prevP1Father">Shri Ram Chand</span></strong>, Resident of <span id="prevP1Address">House No. 124, Model Town, Rohtak, Haryana</span><span id="prevP1Aad"></span>.
+                        <strong><span id="prevP1Name">Suresh Chand</span></strong>, S/o <strong><span id="prevP1Father">Shri Ram Chand</span></strong>, Resident of <span id="prevP1Address">House No. 124, Model Town, Rohtak, Haryana</span>.
                     </div>
 
                     <div class="doc-section">
@@ -295,7 +302,7 @@
 
                     <div class="doc-section">
                         <strong>SECOND PARTY (Tenant):</strong><br>
-                        <strong><span id="prevP2Name">Vikas Verma</span></strong>, S/o <strong><span id="prevP2Father">Shri Hari Singh</span></strong>, Resident of <span id="prevP2Address">VPO Sampla, Rohtak, Haryana</span><span id="prevP2Aad"></span>.
+                        <strong><span id="prevP2Name">Vikas Verma</span></strong>, S/o <strong><span id="prevP2Father">Shri Hari Singh</span></strong>, Resident of <span id="prevP2Address">VPO Sampla, Rohtak, Haryana</span>.
                     </div>
 
                     <div class="doc-section">
@@ -317,8 +324,7 @@
                         IN WITNESS WHEREOF, both parties have signed this Agreement on the date and year first mentioned above in the presence of the following witnesses.
                     </div>
 
-                    <div class="photo-row"><div class="pbox"><div class="pimg"><img id="prevPh1" alt="" style="display:none"><span>Affix photo</span></div><small>First Party</small></div><div class="pbox"><div class="pimg"><img id="prevPh2" alt="" style="display:none"><span>Affix photo</span></div><small>Second Party</small></div></div>
-<div class="signature-grid">
+                    <div class="signature-grid">
                         <div class="sig-box">
                             Signature of First Party<br>
                             (<span id="prevSigP1">Suresh Chand</span>)
@@ -328,7 +334,18 @@
                             (<span id="prevSigP2">Vikas Verma</span>)
                         </div>
                     </div>
-                <div class="annex" id="annex"><div class="doc-title">Annexure: Identity Proofs</div><h4>Second Party (Tenant)</h4><div class="annex-grid"><figure class="slotfig"><div class="card-preview-box"><img id="img_t1" alt="" style="display:none"><span>Upload ID copy</span></div><figcaption id="cap_t1"></figcaption></figure><figure class="slotfig"><div class="card-preview-box"><img id="img_t2" alt="" style="display:none"><span>Upload ID copy</span></div><figcaption id="cap_t2"></figcaption></figure></div><div id="annO" style="display:none"><h4>First Party (Owner)</h4><div class="annex-grid"><figure class="slotfig"><div class="card-preview-box"><img id="img_o1" alt="" style="display:none"><span>Upload ID copy</span></div><figcaption id="cap_o1"></figcaption></figure><figure class="slotfig"><div class="card-preview-box"><img id="img_o2" alt="" style="display:none"><span>Upload ID copy</span></div><figcaption id="cap_o2"></figcaption></figure></div></div></div></div>
+                    <div id="annexure" style="page-break-before:always;break-before:page;margin-top:30px">
+                        <div class="doc-title" style="font-size:16px">ANNEXURE: TENANT PHOTO AND ID PROOF</div>
+                        <div style="display:flex;gap:14px;align-items:flex-start;margin:12px 0">
+                            <div style="text-align:center;font-size:12px"><img id="tenantPhoto" alt="" style="width:35mm;height:45mm;object-fit:cover;border:1px solid #888;display:none"><div id="tenantCap"></div></div>
+                            <div style="font-size:12px"><b>Tenant:</b> <span id="annName"></span></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px">
+                            <div><b id="idCap1"></b><div style="border:1px dashed #888;min-height:55mm;display:flex;align-items:center;justify-content:center"><img id="idImg1" alt="" style="max-width:100%;max-height:80mm;display:none"></div></div>
+                            <div><b id="idCap2"></b><div style="border:1px dashed #888;min-height:55mm;display:flex;align-items:center;justify-content:center"><img id="idImg2" alt="" style="max-width:100%;max-height:80mm;display:none"></div></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -337,8 +354,15 @@
 <footer id="site-footer"></footer>
 <script>
         // Set default date to today
-        (function(){const t=new Date();document.getElementById('docDate').value=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');})();
+        document.getElementById('docDate').valueAsDate = new Date();
 
+        function loadAnn(e,id){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=x=>{const i=document.getElementById(id);i.src=x.target.result;i.style.display='block';};r.readAsDataURL(f);}
+        function updateAnnexure(){
+            const g=id=>document.getElementById(id);
+            g('annexure').style.display=g('showAnn').checked?'block':'none';
+            g('annName').innerText=g('p2Name').value;
+            [1,2].forEach(n=>{g('idCap'+n).innerText='ID proof '+n+': '+g('idType'+n).value+(g('idNo'+n).value?' - '+g('idNo'+n).value:'');});
+        }
         function updateAgreement() {
             const type = document.getElementById('agreementType').value;
             document.getElementById('prevDocTitle').innerText = type === 'rent' ? 'RENT AGREEMENT' : 'SERVICE AGREEMENT';
@@ -347,7 +371,7 @@
             if (rawDate) {
                 const dateObj = new Date(rawDate);
                 const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                document.getElementById('prevDocDate').innerText = dateObj.toLocaleDateString('en-GB', options);
+                document.getElementById('prevDocDate').innerText = dateObj.toLocaleDateString('en-US', options);
             }
 
             const p1Name = document.getElementById('p1Name').value;
@@ -372,21 +396,12 @@
 
             document.getElementById('prevSigP1').innerText = p1Name;
             document.getElementById('prevSigP2').innerText = p2Name;
+            updateAnnexure();
         }
 
         // Initialize preview
         updateAgreement();
-    
-function loadImg(e,id){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const i=document.getElementById(id);i.src=ev.target.result;i.style.display='block';if(i.nextElementSibling)i.nextElementSibling.style.display='none';};r.readAsDataURL(f);}
-const SL=[['t1','Tenant'],['t2','Tenant'],['o1','Owner'],['o2','Owner']];
-function updateExtra(){const g=id=>document.getElementById(id);
- ['1','2'].forEach(n=>{const v=g('p'+n+'Aad').value.trim();g('prevP'+n+'Aad').textContent=v?', Aadhaar No. '+v:'';});
- SL.forEach(([k,w])=>{g('cap_'+k).textContent=w+': '+g('ty_'+k).value;});
- g('annex').style.display=g('annexOn').checked?'block':'none';g('annO').style.display=g('ownOn').checked?'block':'none';}
-updateExtra();
-
-</script>
+    </script>
 <script src="assets/js/site.js"></script>
-<script src="assets/js/cardfit.js"></script>
 </body>
 </html>

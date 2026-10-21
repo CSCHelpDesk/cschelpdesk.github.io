@@ -1,30 +1,29 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Date difference calculator | CSC Desk</title><meta name="description" content="Days between two dates, and the date after adding or subtracting days.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>@page{size:A4;margin:0}</style></head><body>
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
-<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Calculators</div><h1>Date difference calculator</h1><p>Days between two dates, and the date after adding or subtracting days.</p></div>
-<div class="split"><section class="panel"><h2>Difference between two dates</h2>
-<div class="field"><label for="d1">From date</label><input type="date" id="d1"></div>
-<div class="field"><label for="d2">To date</label><input type="date" id="d2"></div>
-<button class="btn" id="b1">Calculate</button><p class="result" id="r1" hidden></p></section>
-<section class="panel"><h2>Add or subtract days</h2>
-<div class="field"><label for="d3">Start date</label><input type="date" id="d3"></div>
-<div class="field"><label for="n3">Days (use a minus sign to go back)</label><input type="number" id="n3" value="30"></div>
-<button class="btn" id="b2">Show date</button><p class="result" id="r2" hidden></p></section></div></main><footer id="site-footer"></footer>
-<script src="assets/js/site.js"></script><script>
-const $=id=>document.getElementById(id);
-
-const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const P=v=>{const p=v.split('-');return new Date(+p[0],+p[1]-1,+p[2]);};
-$('d1').value=$('d2').value=$('d3').value=iso(new Date());
-$('b1').onclick=()=>{ if(!$('d1').value||!$('d2').value) return; let a=P($('d1').value),b=P($('d2').value),sw=false; if(a>b){[a,b]=[b,a];sw=true;}
- let y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();
- if(d<0){m--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate();} if(m<0){y--;m+=12;}
- const days=Math.round((Date.UTC(b.getFullYear(),b.getMonth(),b.getDate())-Date.UTC(a.getFullYear(),a.getMonth(),a.getDate()))/864e5);
- $('r1').hidden=false;$('r1').textContent=days+' days ('+Math.floor(days/7)+' weeks '+days%7+' days) | '+y+' years, '+m+' months, '+d+' days'+(sw?' (dates were swapped)':'');};
-$('b2').onclick=()=>{ const s=$('d3').value; if(!s) return; const x=P(s); x.setDate(x.getDate()+(parseInt($('n3').value)||0)); $('r2').hidden=false; $('r2').textContent=x.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});};</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Date Calculator | CSC Desk</title>
+  <meta name="description" content="Days between dates, or add and subtract days.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Date Calculator</div>
+      <h1>Date Calculator</h1>
+      <p>Days between dates, or add and subtract days.</p>
+    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/tools-calc.js"></script>
+  <script>CSC.mount('date_calculator');</script>
+</body>
+</html>

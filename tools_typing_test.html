@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Typing speed test | CSC Desk</title><meta name="description" content="Practise English and Hindi typing. See your speed in words per minute and your accuracy.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>.tt{font-size:1.1rem;line-height:1.9;padding:12px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;background:var(--bg)}.tt span.ok{color:#0b6e4f}.tt span.bad{color:#b3261e;text-decoration:line-through}.tt span.cur{background:var(--saffron-soft);border-radius:4px;box-shadow:0 0 0 2px var(--saffron)}</style></head><body>
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
-<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Utilities</div><h1>Typing speed test</h1><p>Practise English and Hindi typing. See your speed in words per minute and your accuracy.</p></div>
-<div class="panel" style="max-width:860px"><div class="row2"><div class="field"><label for="lg">Language</label><select id="lg"><option value="en">English</option><option value="hi">Hindi</option></select></div><div class="field"><label for="tm">Time</label><select id="tm"><option value="60">1 minute</option><option value="120">2 minutes</option><option value="300">5 minutes</option></select></div></div>
-<p class="note">For Hindi, switch your keyboard to a Hindi layout (Windows: Win + Space). The timer starts when you type the first letter.</p>
-<div id="txt" class="tt" aria-live="off"></div><textarea id="in" rows="4" placeholder="Start typing here..." style="width:100%;font:inherit;font-size:1.05rem;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)" spellcheck="false" autocomplete="off"></textarea>
-<div style="display:flex;gap:18px;flex-wrap:wrap;margin:10px 0"><span>Time left: <b id="tl">60</b>s</span><span>Speed: <b id="wp">0</b> WPM</span><span>Accuracy: <b id="ac">100</b>%</span></div>
-<button class="btn" id="rs" type="button"><i class="fa-solid fa-rotate"></i> New test</button><p class="result" id="res" hidden style="margin-top:10px"></p></div></main><footer id="site-footer"></footer>
-<script src="assets/js/site.js"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const P={"en1": "A common service centre helps people reach government services close to their home. A villager can apply for a certificate, pay a bill, or print an important document without travelling to the city. The operator listens carefully, checks every detail twice, and enters the information slowly and correctly. Good typing saves time for both the customer and the shop. With daily practice, your speed improves, and your mistakes become fewer. Always keep your fingers on the home row and look at the screen, not at the keys.", "en2": "Before submitting any online form, read each field again. A small spelling mistake in a name or a wrong digit in a number can cause a long delay. Keep the original documents beside you and match every line with care. Save a copy of the receipt for the customer, and write the application number on it. A calm and patient worker earns the trust of the community, and trust brings new customers to the centre every day.", "hi1": "कॉमन सर्विस सेंटर गांव के लोगों को सरकारी सेवाएं उनके घर के पास उपलब्ध कराता है। कोई भी व्यक्ति प्रमाण पत्र के लिए आवेदन कर सकता है, बिल जमा कर सकता है या जरूरी दस्तावेज निकलवा सकता है। ऑपरेटर हर जानकारी को ध्यान से देखता है और सही तरीके से भरता है। रोज अभ्यास करने से टाइपिंग की गति बढ़ती है और गलतियां कम होती हैं।", "hi2": "फॉर्म जमा करने से पहले हर खाना एक बार फिर पढ़ना चाहिए। नाम में एक छोटी सी गलती या नंबर में एक गलत अंक बड़ी परेशानी बन सकता है। असली दस्तावेज अपने पास रखें और हर पंक्ति को मिलाकर देखें। ग्राहक को रसीद की एक प्रति जरूर दें और उस पर आवेदन संख्या लिख दें।"};
-let words=[],t0=0,tick=null,done=false,total=60;
-function start(){clearInterval(tick);done=false;t0=0;total=+$('tm').value;const k=$('lg').value+(Math.random()<.5?'1':'2');words=P[k].split(/\s+/);
- $('txt').innerHTML=words.map((w,i)=>'<span id="w'+i+'">'+esc(w)+'</span>').join(' ');$('in').value='';$('in').disabled=false;$('tl').textContent=total;$('wp').textContent=0;$('ac').textContent=100;$('res').hidden=true;mark();$('in').focus();}
-function stats(){const typed=$('in').value.split(/\s+/).filter(Boolean),full=$('in').value.endsWith(' ');let ok=0;const doneN=full?typed.length:typed.length-1;
- for(let i=0;i<doneN;i++)if(typed[i]===words[i])ok++;const min=Math.max((Date.now()-t0)/60000,1/60);return{ok,doneN,wpm:Math.round(ok/min),acc:doneN>0?Math.round(ok/doneN*100):100,typed};}
-function mark(){const s=stats();words.forEach((w,i)=>{const e=$('w'+i);e.className=i<s.doneN?(s.typed[i]===w?'ok':'bad'):(i===s.doneN?'cur':'');});}
-function end(){done=true;clearInterval(tick);$('in').disabled=true;const s=stats();$('res').hidden=false;$('res').textContent='Time up. Speed: '+s.wpm+' WPM | Accuracy: '+s.acc+'% | Correct words: '+s.ok+' of '+s.doneN+' typed.';}
-$('in').oninput=()=>{if(done)return;if(!t0){t0=Date.now();tick=setInterval(()=>{const left=Math.max(0,total-Math.round((Date.now()-t0)/1000));$('tl').textContent=left;if(left<=0)end();},250);}
- const s=stats();$('wp').textContent=s.wpm;$('ac').textContent=s.acc;mark();if(s.doneN>=words.length)end();};
-$('rs').onclick=start;$('lg').onchange=start;$('tm').onchange=start;start();</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typing Test | CSC Desk</title>
+  <meta name="description" content="Check typing speed and accuracy in English or Hindi.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Typing Test</div>
+      <h1>Typing Test</h1>
+      <p>Check typing speed and accuracy in English or Hindi.</p>
+    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/tools-calc.js"></script>
+  <script>CSC.mount('typing_test');</script>
+</body>
+</html>

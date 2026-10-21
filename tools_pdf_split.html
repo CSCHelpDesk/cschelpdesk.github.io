@@ -1,25 +1,30 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Split PDF: pull out pages | CSC Desk</title><meta name="description" content="Keep only the pages you need from a PDF, or remove pages you do not want.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/portal.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<style></style></head><body>
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
-<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>Split PDF: pull out pages</h1><p>Keep only the pages you need from a PDF, or remove pages you do not want.</p></div>
-<div class="panel" style="max-width:720px"><div class="field"><label for="f">Choose a PDF</label><input type="file" id="f" accept="application/pdf"></div><p class="result" id="info" hidden></p>
-<div class="field"><label for="rg">Pages (example: 1-3, 5, 8-10)</label><input id="rg" placeholder="1-3, 5"></div>
-<div class="field"><label for="md">What should I do?</label><select id="md"><option value="keep">Keep only these pages</option><option value="rm">Remove these pages</option></select></div>
-<button class="btn" id="go" type="button"><i class="fa-solid fa-scissors"></i> Create new PDF</button><p class="note" style="margin-top:8px">Nothing is uploaded; it all happens in your browser. Files with a password cannot be opened.</p></div></main><footer id="site-footer"></footer>
-<script src="assets/js/site.js"></script><script>
-const $=id=>document.getElementById(id);
-const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function dl(bytes,name){const b=new Blob([bytes],{type:'application/pdf'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);}
-let buf=null,n=0,name='file';const info=t=>{$('info').hidden=false;$('info').textContent=t;};
-$('f').onchange=async e=>{const f=e.target.files[0];if(!f)return;name=f.name.replace(/\.pdf$/i,'');buf=await f.arrayBuffer();try{const d=await PDFLib.PDFDocument.load(buf);n=d.getPageCount();info(f.name+': '+n+' pages');}catch(err){buf=null;info('Could not read this PDF. It may have a password.');}};
-function parse(t){const s=new Set();for(const part of t.split(',')){const p=part.trim();if(!p)continue;const m=p.match(/^(\d+)(?:\s*-\s*(\d+))?$/);if(!m)return null;let a=+m[1],b=m[2]?+m[2]:a;if(a>b)[a,b]=[b,a];if(a<1||b>n)return null;for(let i=a;i<=b;i++)s.add(i-1);}return [...s].sort((x,y)=>x-y);}
-$('go').onclick=async()=>{if(!buf){alert('Please choose a PDF first.');return;}const sel=parse($('rg').value);if(!sel||!sel.length){alert('Please type valid page numbers between 1 and '+n+', like 1-3, 5');return;}
- const keep=$('md').value==='keep'?sel:[...Array(n).keys()].filter(i=>!sel.includes(i));if(!keep.length){alert('That would remove every page.');return;}
- try{const d=await PDFLib.PDFDocument.load(buf),out=await PDFLib.PDFDocument.create(),pg=await out.copyPages(d,keep);pg.forEach(p=>out.addPage(p));const b=await out.save();dl(b,name+'-pages.pdf');info('Done. New PDF has '+keep.length+' pages.');}catch(err){console.error(err);info('Could not create the PDF.');}};</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF Split | CSC Desk</title>
+  <meta name="description" content="Split or extract pages from a PDF (same tool as PDF Splitter).">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / PDF Split</div>
+      <h1>PDF Split</h1>
+      <p>Split or extract pages from a PDF (same tool as PDF Splitter).</p>
+    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/tools-docs.js"></script>
+  <script src="assets/js/tools-pdf.js"></script>
+  <script>CSC.mount('pdf_split');</script>
+</body>
+</html>

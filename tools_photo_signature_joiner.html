@@ -1,36 +1,30 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Photo + signature joiner | CSC Desk</title><meta name="description" content="Join a passport photo and a signature into one image, as many exam forms ask.">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="assets/css/portal.css">
-<style>@page{size:A4;margin:0}</style></head><body>
-<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
-<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Photo & ID print</div><h1>Photo + signature joiner</h1><p>Join a passport photo and a signature into one image, as many exam forms ask.</p></div>
-<div class="split"><section class="panel">
-<div class="field"><label for="pf">Photo</label><input type="file" id="pf" accept="image/*"></div><div class="field"><label for="sf">Signature image</label><input type="file" id="sf" accept="image/*"></div>
-<div class="row2"><div class="field"><label for="w">Width (px)</label><input type="number" id="w" value="200"></div><div class="field"><label for="hp">Photo height (px)</label><input type="number" id="hp" value="230"></div></div>
-<div class="row2"><div class="field"><label for="hs">Strip height (px)</label><input type="number" id="hs" value="60"></div><div class="field"><label for="kb">Max size (KB)</label><input type="number" id="kb" value="50"></div></div>
-<p class="note">Check the exact size and KB limit in your form notification.</p></section>
-<section class="panel"><canvas id="cv" class="preview-img"></canvas><p class="result" id="inf" style="margin:10px 0"></p>
-<a class="btn" id="dl"><i class="fa-solid fa-download"></i> Download JPG</a></section></div></main><footer id="site-footer"></footer>
-<script src="assets/js/site.js"></script><script>
-const $=id=>document.getElementById(id);
-const MODE="sign"; let photoImg=null,signImg=null;
-function load(file,cb){const r=new FileReader();r.onload=e=>{const i=new Image();i.onload=()=>cb(i);i.src=e.target.result;};r.readAsDataURL(file);}
-$('pf').onchange=e=>{if(e.target.files[0])load(e.target.files[0],i=>{photoImg=i;draw();});};
-if(MODE==='sign') $('sf').onchange=e=>{if(e.target.files[0])load(e.target.files[0],i=>{signImg=i;draw();});};
-else {const t=new Date();$('dt').value=t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');}
-['w','hp','hs','kb','nm','dt'].forEach(id=>{const el=$(id);if(el)el.oninput=draw;});
-function fit(x,i,dx,dy,dw,dh,cover){const s=cover?Math.max(dw/i.width,dh/i.height):Math.min(dw/i.width,dh/i.height),w=i.width*s,h=i.height*s;x.save();x.beginPath();x.rect(dx,dy,dw,dh);x.clip();x.drawImage(i,dx+(dw-w)/2,dy+(dh-h)/2,w,h);x.restore();}
-function draw(){const W=+$('w').value||200,PH=+$('hp').value||230,SH=+$('hs').value||60,kb=+$('kb').value||50,c=$('cv');c.width=W;c.height=PH+SH;const x=c.getContext('2d');
- x.fillStyle='#fff';x.fillRect(0,0,W,PH+SH);
- if(photoImg) fit(x,photoImg,0,0,W,PH,true); else {x.fillStyle='#e8eeea';x.fillRect(0,0,W,PH);x.fillStyle='#58695f';x.font='14px Arial';x.textAlign='center';x.fillText('Photo',W/2,PH/2);}
- if(MODE==='sign'){ if(signImg) fit(x,signImg,4,PH+3,W-8,SH-6,false); }
- else {const nm=($('nm').value||'').toUpperCase(),dt=$('dt').value;x.fillStyle='#000';x.textAlign='center';x.textBaseline='middle';let fs=Math.floor(SH*0.38);x.font='bold '+fs+'px Arial';
-  while(x.measureText(nm).width>W-8&&fs>8){fs--;x.font='bold '+fs+'px Arial';} x.fillText(nm,W/2,PH+SH*0.32);x.font=Math.max(9,Math.floor(SH*0.3))+'px Arial';x.fillText(dt?dt.split('-').reverse().join('-'):'',W/2,PH+SH*0.72);}
- x.strokeStyle='#000';x.lineWidth=1;x.strokeRect(.5,.5,W-1,PH+SH-1);
- let q=0.95,u=c.toDataURL('image/jpeg',q);while(u.length*0.75/1024>kb&&q>0.1){q-=0.05;u=c.toDataURL('image/jpeg',q);}
- $('inf').textContent=W+' x '+(PH+SH)+' px | '+(u.length*0.75/1024).toFixed(1)+' KB';const a=$('dl');a.href=u;a.download='photo-'+MODE+'.jpg';}
-draw();</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Photo Signature Joiner | CSC Desk</title>
+  <meta name="description" content="Join photo and signature into one image (same tool as Photo &amp; Signature Joiner).">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portal.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header id="site-header"></header>
+  <main id="main">
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Photo Signature Joiner</div>
+      <h1>Photo Signature Joiner</h1>
+      <p>Join photo and signature into one image (same tool as Photo &amp; Signature Joiner).</p>
+    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
+  </main>
+  <footer id="site-footer"></footer>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/tools-docs.js"></script>
+  <script src="assets/js/tools-image.js"></script>
+  <script>CSC.mount('photo_signature_joiner');</script>
+</body>
+</html>

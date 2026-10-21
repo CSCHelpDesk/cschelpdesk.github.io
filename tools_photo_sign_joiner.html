@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Photo & Signature Joiner | CSC Desk</title>
-  <meta name="description" content="Join your photo and signature with adjustable borders.">
+  <title>Photo &amp; Signature Joiner | CSC Desk</title>
+  <meta name="description" content="Join photo and signature into a single image with adjustable border.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,23 +14,16 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <header id="site-header"></header>
   <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Photo & Signature Joiner</h1>
-      <p>Join your photo and signature with adjustable borders.</p>
+    <div class="page-head no-print">
+      <div class="crumbs"><a href="index.html">Home</a> / Photo &amp; Signature Joiner</div>
+      <h1>Photo &amp; Signature Joiner</h1>
+      <p>Join photo and signature into a single image with adjustable border.</p>
     </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Photo & Signature Joiner Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
+    <div id="tool-root"><noscript>This tool needs JavaScript. Please turn it on in your browser.</noscript></div>
   </main>
   <footer id="site-footer"></footer>
   <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
+  <script src="assets/js/tools-image.js"></script>
+  <script>CSC.mount('photo_sign_joiner');</script>
 </body>
 </html>

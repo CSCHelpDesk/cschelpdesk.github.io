@@ -83,7 +83,15 @@
     ['tools_multiple_id_card_print', 'Multiple ID Card Print', 'Paste a list and photos to print many ID cards, 10 per A4 page.', 'id', 'fa-people-group'],
   ].map(function (t) { return { file: t[0], name: t[1], desc: t[2], cat: t[3], icon: t[4] }; });
 
-  var CSC = window.CSC = { TOOLS: TOOLS, CATS: CATS, tools: {} };
+  /* ---------- Official portal quick links: add a new link by adding one line here ---------- */
+  var LINKS = [
+    // [name, short description, url, font-awesome icon]
+    ['Mobisafar Agent Portal', 'AEPS & banking login', 'https://agent.mobisafar.com/MOBISAFAR/Login.aspx', 'fa-wallet'],
+    ['CSC DigiPay Lite', 'Micro ATM & merchant banking', 'https://digipaylite.in/', 'fa-mobile-screen-button'],
+    ['CSC Digital Seva Connect', 'Official auth & citizen services', 'https://connect.csc.gov.in/account/authorize?response_type=code&client_id=0f8ca686-5a31-46b8-bb51-d9834ba9fa9d&redirect_uri=https%3A%2F%2Fdigitalseva.csc.gov.in%2Fauth%2Fcallback%2F&state=45937', 'fa-id-card-clip']
+  ];
+
+  var CSC = window.CSC = { LINKS: LINKS, TOOLS: TOOLS, CATS: CATS, tools: {} };
   CSC.libs = {
     pdflib: 'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js',
     jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
@@ -97,6 +105,30 @@
   CSC.$ = $; CSC.$$ = $$;
   var esc = CSC.esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
+
+  /* ---------- Page background colour (global: every page gets it from the header) ---------- */
+  var BGS = [['Default', '#f4f7f6'], ['White', '#ffffff'], ['Cream', '#fbf6e9'], ['Sky', '#e8f1fb'], ['Mint', '#e6f5ec'], ['Rose', '#fbeaee'], ['Lilac', '#efe9fa'], ['Grey', '#e6e9ed']];
+  function applyBg(c) {
+    var st = document.getElementById('csc-bg');
+    if (!st) { st = document.createElement('style'); st.id = 'csc-bg'; document.head.appendChild(st); }
+    st.textContent = c && c !== BGS[0][1] ? 'body{background:' + c + ' !important}:root{--bg:' + c + '}@media print{body{background:#fff !important}}' : '';
+  }
+  function bgPicker(hdr) {
+    var cur = CSC.safe.get('csc_bg', BGS[0][1]); applyBg(cur);
+    var nav = hdr.querySelector('nav'); if (!nav) return;
+    var wrap = document.createElement('div'); wrap.className = 'bgpick no-print';
+    wrap.innerHTML = '<button type="button" class="bgbtn" aria-haspopup="true" aria-expanded="false" title="Change background colour"><i class="fa-solid fa-palette" aria-hidden="true"></i> <span>BG Colour</span></button><div class="bgmenu" hidden role="group" aria-label="Background colour">' +
+      BGS.map(function (b) { return '<button type="button" class="sw" data-c="' + b[1] + '" title="' + b[0] + '" aria-label="' + b[0] + '" style="background:' + b[1] + '"></button>'; }).join('') +
+      '<label class="swc" title="Pick any colour"><input type="color" value="' + (/^#[0-9a-f]{6}$/i.test(cur) ? cur : '#f4f7f6') + '" aria-label="Custom colour"></label></div>';
+    nav.appendChild(wrap);
+    var btn = wrap.querySelector('.bgbtn'), menu = wrap.querySelector('.bgmenu');
+    function set(c) { cur = c; CSC.safe.set('csc_bg', c); applyBg(c); }
+    btn.onclick = function (e) { e.stopPropagation(); var o = menu.hidden; menu.hidden = !o; btn.setAttribute('aria-expanded', String(o)); };
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); } });
+    [].forEach.call(menu.querySelectorAll('.sw'), function (b) { b.onclick = function () { set(b.getAttribute('data-c')); }; });
+    menu.querySelector('input').addEventListener('input', function () { set(this.value); });
+  }
+
   /* ---------- Header and footer ---------- */
   function chrome() {
     var h = $('#site-header');
@@ -105,6 +137,7 @@
       h.innerHTML = '<div class="hdr"><a class="logo" href="index.html"><img src="favicon.svg" alt="" width="32" height="32"> CSC Desk</a>' +
         '<nav aria-label="Main"><a href="index.html"' + (here === 'index.html' ? ' aria-current="page"' : '') + '>Home</a>' +
         '<a href="index.html#tools">Tools</a><a href="index.html#links">Portal Links</a></nav></div>';
+      bgPicker(h);
     }
     var f = $('#site-footer');
     if (f && !f.firstChild) {
@@ -114,7 +147,15 @@
   }
 
   /* ---------- Home page ---------- */
+  function quickLinks() {
+    var g = $('#quick-links'); if (!g) return;
+    g.innerHTML = LINKS.map(function (l) {
+      return '<a href="' + esc(l[2]) + '" target="_blank" rel="noopener" class="quick-card"><i class="fa-solid ' + esc(l[3] || 'fa-link') + '" aria-hidden="true"></i><strong>' + esc(l[0]) + '</strong><span>' + esc(l[1]) + '</span></a>';
+    }).join('');
+  }
+
   function home() {
+    quickLinks();
     var list = $('#tool-list'); if (!list) return;
     var cats = $('#cats'), side = $('#category-list'), q = $('#tool-search');
     var active = 'all';

@@ -1,36 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Add Watermark to PDF | CSC Desk</title>
-  <meta name="description" content="Add custom text or image watermarks across PDF pages.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/portal.css">
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to content</a>
-  <header id="site-header"></header>
-  <main id="main">
-    <div class="page-head">
-      <div class="crumbs"><a href="index.html">Home</a> / Tools</div>
-      <h1>Add Watermark to PDF</h1>
-      <p>Add custom text or image watermarks across PDF pages.</p>
-    </div>
-    <div class="card" style="max-width: 800px; margin: 0 auto; padding: 24px;">
-      <h3><i class="fa-solid fa-toolbox"></i> Add Watermark to PDF Workspace</h3>
-      <p style="margin-top: 10px; color: var(--muted);">This tool is fully functional, optimized for CSC operators, and ready for printing or processing.</p>
-      <div style="margin-top: 20px; padding: 20px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; background: var(--soft);">
-        <i class="fa-solid fa-cloud-arrow-up" style="font-size: 3rem; color: var(--brand); margin-bottom: 10px;"></i>
-        <p><b>Drag & Drop files here or click to browse</b></p>
-        <button class="btn" style="margin-top: 12px;" onclick="alert('Processing complete!')">Process / Generate</button>
-      </div>
-    </div>
-  </main>
-  <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
-  <script src="assets/js/page-theme.js"></script>
-</body>
-</html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Add watermark to PDF | CSC Desk</title><meta name="description" content="Put a text or logo watermark on every page of a PDF. Set size, opacity, angle and position.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/portal.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<style>@page{size:A4;margin:0}</style></head><body>
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
+<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>Add watermark to PDF</h1><p>Put a text or logo watermark on every page of a PDF. Set size, opacity, angle and position.</p></div>
+<div class="panel" style="max-width:760px"><div class="field"><label for="f">Choose a PDF</label><input type="file" id="f" accept="application/pdf"></div><div class="row2"><div class="field"><label for="ty">Watermark type</label><select id="ty"><option value="t">Text</option><option value="i">Image / logo</option></select></div><div class="field"><label for="ps">Position</label><select id="ps"><option value="c">Centre</option><option value="tile">Repeated across the page</option><option value="top">Top</option><option value="bot">Bottom</option></select></div></div><div id="gt" class="row2"><div class="field"><label for="tx">Text</label><input type="text" id="tx" value="CONFIDENTIAL" ></div><div class="field"><label for="co">Colour</label><input type="color" id="co" value="#b3261e" style="height:42px;padding:2px"></div></div><div id="gi" class="field" style="display:none"><label for="im">Image (PNG with transparent background is best)</label><input type="file" id="im" accept="image/*"></div><div class="row2"><div class="field"><label>Size (% of page width): <span id="szv">50</span></label><input type="range" id="sz" min="10" max="100" value="50"></div><div class="field"><label>Opacity: <span id="opv">25</span>%</label><input type="range" id="op" min="5" max="100" value="25"></div></div><div class="field"><label for="ro">Rotation (degrees, anticlockwise)</label><input type="number" id="ro" value="45" ></div><button class="btn" id="go" type="button"><i class="fa-solid fa-droplet"></i> Add watermark and download</button><p class="result" id="msg" hidden style="margin-top:10px"></p><p class="note" style="margin-top:8px">Text can be in any language, including Hindi. Files with a password cannot be changed. Nothing is uploaded.</p></div></main><footer id="site-footer"></footer>
+<script src="assets/js/site.js"></script><script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let buf=null,name='file';const msg=t=>{$('msg').hidden=false;$('msg').textContent=t;};
+$('f').onchange=async e=>{const f=e.target.files[0];if(!f)return;name=f.name.replace(/\.pdf$/i,'');buf=await f.arrayBuffer();msg('Selected: '+f.name);};
+$('ty').onchange=()=>{$('gt').style.display=$('ty').value==='t'?'grid':'none';$('gi').style.display=$('ty').value==='i'?'block':'none';$('ro').value=$('ty').value==='t'?45:0;};
+$('sz').oninput=()=>$('szv').textContent=$('sz').value;$('op').oninput=()=>$('opv').textContent=$('op').value;
+const toPng=src=>new Promise(res=>{const i=new Image();i.onload=()=>{const c=document.createElement('canvas');c.width=i.width;c.height=i.height;c.getContext('2d').drawImage(i,0,0);res(c.toDataURL('image/png'));};i.src=src;});
+async function mark(){if($('ty').value==='i'){const f=$('im').files[0];if(!f)throw new Error('Please choose an image.');return toPng(await new Promise(r=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.readAsDataURL(f);}));}
+ const t=$('tx').value.trim();if(!t)throw new Error('Please type the watermark text.');try{await document.fonts.load('bold 100px Mukta');}catch(e){}
+ const c=document.createElement('canvas'),x=c.getContext('2d');x.font='bold 120px Mukta, Arial, sans-serif';const w=Math.ceil(x.measureText(t).width)+40;c.width=w;c.height=200;x.font='bold 120px Mukta, Arial, sans-serif';x.fillStyle=$('co').value;x.textBaseline='middle';x.fillText(t,20,100);return c.toDataURL('image/png');}
+$('go').onclick=async()=>{if(!buf){alert('Please choose a PDF first.');return;}
+ try{msg('Working...');const png=await mark(),doc=await PDFLib.PDFDocument.load(buf),emb=await doc.embedPng(png),sc=$('sz').value/100,op=$('op').value/100,deg=+$('ro').value||0,th=deg*Math.PI/180,cs=Math.cos(th),sn=Math.sin(th);
+ for(const p of doc.getPages()){const{width:pw,height:ph}=p.getSize(),w=pw*sc,h=w*emb.height/emb.width,pos=$('ps').value,pts=[];
+  if(pos==='c')pts.push([pw/2,ph/2]);else if(pos==='top')pts.push([pw/2,ph-h-30]);else if(pos==='bot')pts.push([pw/2,h+30]);
+  else{const gx=w*1.5,gy=Math.max(h*3,ph/5);let r=0;for(let y=gy/2;y<ph+gy;y+=gy,r++)for(let xx=(r%2)*gx/2;xx<pw+gx;xx+=gx)pts.push([xx,y]);}
+  for(const[cx,cy]of pts)p.drawImage(emb,{x:cx-(w/2*cs-h/2*sn),y:cy-(w/2*sn+h/2*cs),width:w,height:h,rotate:PDFLib.degrees(deg),opacity:op});}
+ const b=await doc.save(),bl=new Blob([b],{type:'application/pdf'}),a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download=name+'-watermarked.pdf';document.body.appendChild(a);a.click();a.remove();msg('Done. '+(b.length/1024).toFixed(0)+' KB.');}
+ catch(err){console.error(err);msg(err.message&&err.message.length<90?err.message:'Could not change this PDF. It may have a password.');}};</script></body></html>

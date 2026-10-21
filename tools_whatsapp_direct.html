@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp direct message | CSC Desk</title><meta name="description" content="Open a WhatsApp chat with any number without saving it in your phone. Add a ready message if you like.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>@page{size:A4;margin:0}</style></head><body>
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
+<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / Utilities</div><h1>WhatsApp direct message</h1><p>Open a WhatsApp chat with any number without saving it in your phone. Add a ready message if you like.</p></div>
+<div class="panel" style="max-width:640px"><div class="row2"><div class="field"><label for="cc">Country code</label><input type="text" id="cc" value="91" inputmode="numeric"></div><div class="field"><label for="nu">Mobile number</label><input type="tel" id="nu" value="" inputmode="tel" placeholder="98765 43210"></div></div><div class="field"><label for="tp">Quick message</label><select id="tp"><option value="">(write your own)</option><option>Your document is ready. Please collect it from our centre.</option><option>Please bring your original documents and one photo copy.</option><option>Your application is submitted. We will tell you when there is an update.</option><option>This is a reminder for your pending payment. Thank you.</option></select></div><div class="field"><label for="ms">Message (optional)</label><textarea id="ms" rows="4" style="font:inherit;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);width:100%"></textarea></div><button class="btn" id="go" type="button" style="background:#128c7e;color:#fff"><i class="fa-solid fa-comment-dots"></i> Open WhatsApp chat</button> <button class="btn alt" id="cp" type="button">Copy link</button><p class="result" id="rs" hidden style="margin-top:10px"></p><p class="note" style="margin-top:8px">This opens WhatsApp with the number filled in, so you do not need to save the contact. Nothing is stored on this site.</p></div></main><footer id="site-footer"></footer>
+<script src="assets/js/site.js"></script><script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function full(){const cc=($('cc').value.replace(/\D/g,'')||'91');let n=$('nu').value.replace(/\D/g,'').replace(/^0+/,'');return (n.length>10&&n.startsWith(cc))?n:cc+n;}
+function url(){const m=$('ms').value.trim();return 'https://wa.me/'+full()+(m?'?text='+encodeURIComponent(m):'');}
+const ok=()=>{if($('nu').value.replace(/\D/g,'').length<8){alert('Please type a valid mobile number.');return false;}return true;};
+$('tp').onchange=()=>{if($('tp').value)$('ms').value=$('tp').value;};
+$('go').onclick=()=>{if(ok())window.open(url(),'_blank','noopener');};
+$('cp').onclick=async()=>{if(!ok())return;try{await navigator.clipboard.writeText(url());$('rs').hidden=false;$('rs').textContent='Link copied: '+url();}catch(e){$('rs').hidden=false;$('rs').textContent=url();}};</script></body></html>

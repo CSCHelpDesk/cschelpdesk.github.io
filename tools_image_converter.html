@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image converter (JPG, PNG, WebP) | CSC Desk</title><meta name="description" content="Change pictures between JPG, PNG and WebP. Convert many at once. Works in your browser.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="assets/css/portal.css">
+<style>@page{size:A4;margin:0}.fl{list-style:none;margin:0}.fl li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:.9rem}</style></head><body>
+<a class="skip-link" href="#main">Skip to content</a><header id="site-header"></header>
+<main id="main"><div class="page-head no-print"><div class="crumbs"><a href="index.html">Home</a> / PDF & image</div><h1>Image converter (JPG, PNG, WebP)</h1><p>Change pictures between JPG, PNG and WebP. Convert many at once. Works in your browser.</p></div>
+<div class="split"><section class="panel"><div class="field"><label for="f">Choose images (you can pick several)</label><input type="file" id="f" accept="image/*" multiple></div><div class="row2"><div class="field"><label for="fm">Convert to</label><select id="fm"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option></select></div><div class="field"><label for="q">Quality (JPG / WebP): <span id="qv">90</span>%</label><input type="range" id="q" min="30" max="100" value="90"></div></div><div class="field"><label for="mw">Max width in px (0 = keep size)</label><input type="number" id="mw" value="0" min="0"></div><button class="btn" id="go" type="button"><i class="fa-solid fa-arrows-rotate"></i> Convert</button><p class="note" style="margin-top:8px">JPEG and JPG are the same format. Transparent areas turn white in JPG. Pictures stay in your browser.</p></section><section class="panel"><ul class="fl" id="out"><li class="note">Converted files will appear here.</li></ul></section></div></main><footer id="site-footer"></footer>
+<script src="assets/js/site.js"></script><script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let files=[];$('f').onchange=e=>{files=[].slice.call(e.target.files);$('out').innerHTML='<li class="note">'+files.length+' file(s) selected. Press Convert.</li>';};
+$('q').oninput=()=>$('qv').textContent=$('q').value;
+const load=f=>new Promise((res,rej)=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{URL.revokeObjectURL(u);res(i);};i.onerror=()=>rej();i.src=u;});
+$('go').onclick=async()=>{if(!files.length){alert('Please choose at least one image.');return;}const mime=$('fm').value,ext={'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[mime],mw=+$('mw').value||0;$('out').innerHTML='';
+ for(const f of files){const li=document.createElement('li');try{const i=await load(f);let w=i.width,h=i.height;if(mw&&w>mw){h=Math.round(h*mw/w);w=mw;}const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');if(mime==='image/jpeg'){x.fillStyle='#fff';x.fillRect(0,0,w,h);}x.drawImage(i,0,0,w,h);
+  const b=await new Promise(r=>c.toBlob(r,mime,$('q').value/100));if(!b||b.type!==mime){li.innerHTML='<span>'+esc(f.name)+': this browser cannot make '+ext.toUpperCase()+'.</span>';}
+  else{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=f.name.replace(/\.[^.]+$/,'')+'.'+ext;a.className='btn';a.textContent='Download';li.innerHTML='<span>'+esc(f.name)+' ('+(f.size/1024).toFixed(0)+' KB) &rarr; '+ext.toUpperCase()+' ('+(b.size/1024).toFixed(0)+' KB)</span>';li.appendChild(a);}}
+ catch(e){li.textContent=f.name+': could not read this image.';}$('out').appendChild(li);}};</script></body></html>

@@ -97,10 +97,17 @@
     ['Mera Parivar', 'Haryana family portal', 'https://meraparivar.haryana.gov.in/', 'fa-users'],
     ['Housing PMS Consumer', 'Consumer login', 'https://consumer.housingpms.org.in/#/login?cid=544', 'fa-house'],
     ['MDU Samarth (DDE)', 'DDE MDU student login', 'https://ddemdu.samarth.edu.in/index.php/site/login', 'fa-graduation-cap'],
-    ['ePOS SRC Transaction', 'Ration depot transactions', 'https://epos.haryanafood.gov.in/SRC_Trans_Int', 'fa-receipt'],
+    ['AePDS (Ration)', 'Aadhaar enabled PDS transactions', 'https://epos.haryanafood.gov.in/SRC_Trans_Int', 'fa-receipt'],
     ['Pension Beneficiary Info', 'Social Justice pension', 'https://pension.socialjusticehry.gov.in/Ben_Inf', 'fa-hand-holding-heart'],
-    ['HRTC eBooking', 'Haryana Roadways tickets', 'https://ebooking.hrtransport.gov.in/#/home', 'fa-bus']
+    ['HRTC eBooking', 'Haryana Roadways tickets', 'https://ebooking.hrtransport.gov.in/#/home', 'fa-bus'],
+    ['Aadhaar Download', 'UIDAI e-Aadhaar download', 'https://myaadhaarbeta.uidai.gov.in/genericDownloadAadhaar/en', 'fa-fingerprint'],
+    ['UHS UG Counselling', 'UHS Rohtak counselling', 'https://uhsrugcounselling.com/', 'fa-user-doctor'],
+    ['New ABHA ID', 'Create ABHA health ID', 'https://abha.rqbeonline.co.in/ABHA/generate-abha', 'fa-heart-pulse'],
+    ['Birth & Death Registration', 'CRS certificate download', 'https://dc.crsorgi.gov.in/crs/dwnld', 'fa-baby']
   ];
+
+  /* Put the Shop Ledger app address here; the Open button on the home banner appears automatically. */
+  var SHOP_LEDGER_URL = '';
 
   var CSC = window.CSC = { LINKS: LINKS, TOOLS: TOOLS, CATS: CATS, tools: {} };
   CSC.libs = {
@@ -117,27 +124,51 @@
   var esc = CSC.esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
 
 
-  /* ---------- Page background colour (global: every page gets it from the header) ---------- */
-  var BGS = [['Default', '#f4f7f6'], ['White', '#ffffff'], ['Cream', '#fbf6e9'], ['Sky', '#e8f1fb'], ['Mint', '#e6f5ec'], ['Rose', '#fbeaee'], ['Lilac', '#efe9fa'], ['Grey', '#e6e9ed']];
-  function applyBg(c) {
-    var st = document.getElementById('csc-bg');
-    if (!st) { st = document.createElement('style'); st.id = 'csc-bg'; document.head.appendChild(st); }
-    st.textContent = c && c !== BGS[0][1] ? 'body{background:' + c + ' !important}:root{--bg:' + c + '}@media print{body{background:#fff !important}}' : '';
+  /* ---------- Site theme (whole page: header, buttons, cards, background) ---------- */
+  var THEMES = [['Green', '#0b5c3b'], ['Blue', '#1a56a0'], ['Teal', '#0f766e'], ['Purple', '#6b3fa0'], ['Maroon', '#8b1e3f'], ['Orange', '#b45309'], ['Slate', '#374151']];
+  var BGS = [['Auto', ''], ['White', '#ffffff'], ['Cream', '#fbf6e9'], ['Sky', '#e8f1fb'], ['Mint', '#e6f5ec'], ['Rose', '#fbeaee'], ['Lilac', '#efe9fa'], ['Grey', '#e6e9ed']];
+  function hex2rgb(h) { return [1, 3, 5].map(function (i) { return parseInt(h.substr(i, 2), 16); }); }
+  function mix(h, to, t) { var a = hex2rgb(h), b = hex2rgb(to); return '#' + a.map(function (v, i) { return ('0' + Math.round(v + (b[i] - v) * t).toString(16)).slice(-2); }).join(''); }
+  function applyTheme(t) {
+    var st = document.getElementById('csc-theme');
+    if (!st) { st = document.createElement('style'); st.id = 'csc-theme'; document.head.appendChild(st); }
+    var br = /^#[0-9a-f]{6}$/i.test(t.brand) ? t.brand : THEMES[0][1];
+    var bg = /^#[0-9a-f]{6}$/i.test(t.bg) ? t.bg : mix(br, '#ffffff', 0.94);
+    st.textContent = ':root{--brand:' + br + ';--brand-strong:' + mix(br, '#000000', 0.35) + ';--soft:' + mix(br, '#ffffff', 0.88) + ';--bg:' + bg + '}' +
+      'body{background:var(--bg) !important}.t-drop.over{background:' + mix(br, '#ffffff', 0.78) + '}@media print{body{background:#fff !important}}';
+    var m = document.querySelector('meta[name=theme-color]');
+    if (!m) { m = document.createElement('meta'); m.name = 'theme-color'; document.head.appendChild(m); }
+    m.content = br;
   }
-  function bgPicker(hdr) {
-    var cur = CSC.safe.get('csc_bg', BGS[0][1]); applyBg(cur);
+  function themePicker(hdr) {
+    var t = CSC.safe.get('csc_theme', null) || { brand: THEMES[0][1], bg: CSC.safe.get('csc_bg', '') || '' };
+    if (t.bg === '#f4f7f6') t.bg = '';
+    applyTheme(t);
     var nav = hdr.querySelector('nav'); if (!nav) return;
     var wrap = document.createElement('div'); wrap.className = 'bgpick no-print';
-    wrap.innerHTML = '<button type="button" class="bgbtn" aria-haspopup="true" aria-expanded="false" title="Change background colour"><i class="fa-solid fa-palette" aria-hidden="true"></i> <span>BG Colour</span></button><div class="bgmenu" hidden role="group" aria-label="Background colour">' +
-      BGS.map(function (b) { return '<button type="button" class="sw" data-c="' + b[1] + '" title="' + b[0] + '" aria-label="' + b[0] + '" style="background:' + b[1] + '"></button>'; }).join('') +
-      '<label class="swc" title="Pick any colour"><input type="color" value="' + (/^#[0-9a-f]{6}$/i.test(cur) ? cur : '#f4f7f6') + '" aria-label="Custom colour"></label></div>';
+    wrap.innerHTML = '<button type="button" class="bgbtn" aria-haspopup="true" aria-expanded="false" title="Change page colours"><i class="fa-solid fa-palette" aria-hidden="true"></i> <span>Theme</span></button>' +
+      '<div class="bgmenu" hidden role="group" aria-label="Page theme">' +
+      '<div class="bgttl">Page colour (whole site)</div>' +
+      THEMES.map(function (b) { return '<button type="button" class="sw th" data-k="brand" data-c="' + b[1] + '" title="' + b[0] + '" aria-label="' + b[0] + ' theme" style="background:' + b[1] + '"></button>'; }).join('') +
+      '<label class="swc" title="Pick any theme colour"><input type="color" data-k="brand" value="' + t.brand + '" aria-label="Custom theme colour"></label>' +
+      '<div class="bgttl">Background only</div>' +
+      BGS.map(function (b) { return '<button type="button" class="sw" data-k="bg" data-c="' + b[1] + '" title="' + b[0] + '" aria-label="' + b[0] + ' background" style="background:' + (b[1] || 'linear-gradient(135deg,#fff 50%,#d9e6df 50%)') + '"></button>'; }).join('') +
+      '<label class="swc" title="Pick any background colour"><input type="color" data-k="bg" value="' + (t.bg || '#f4f7f6') + '" aria-label="Custom background colour"></label>' +
+      '<button type="button" class="bgreset">Reset to default</button></div>';
     nav.appendChild(wrap);
     var btn = wrap.querySelector('.bgbtn'), menu = wrap.querySelector('.bgmenu');
-    function set(c) { cur = c; CSC.safe.set('csc_bg', c); applyBg(c); }
+    function set(k, c) { t[k] = c; CSC.safe.set('csc_theme', t); applyTheme(t); }
     btn.onclick = function (e) { e.stopPropagation(); var o = menu.hidden; menu.hidden = !o; btn.setAttribute('aria-expanded', String(o)); };
     document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); } });
-    [].forEach.call(menu.querySelectorAll('.sw'), function (b) { b.onclick = function () { set(b.getAttribute('data-c')); }; });
-    menu.querySelector('input').addEventListener('input', function () { set(this.value); });
+    [].forEach.call(menu.querySelectorAll('.sw'), function (b) { b.onclick = function () { set(b.getAttribute('data-k'), b.getAttribute('data-c')); }; });
+    [].forEach.call(menu.querySelectorAll('input[type=color]'), function (i) { i.addEventListener('input', function () { set(i.getAttribute('data-k'), i.value); }); });
+    wrap.querySelector('.bgreset').onclick = function () { t = { brand: THEMES[0][1], bg: '' }; CSC.safe.set('csc_theme', t); applyTheme(t); };
+  }
+  // keep the sticky sidebar exactly below the sticky header
+  function hdrHeight() {
+    var h = $('#site-header'); if (!h) return;
+    var set = function () { document.documentElement.style.setProperty('--hdr-h', h.offsetHeight + 'px'); };
+    set(); window.addEventListener('resize', set); window.addEventListener('load', set);
   }
 
   /* ---------- Header and footer ---------- */
@@ -148,8 +179,9 @@
       h.innerHTML = '<div class="hdr"><a class="logo" href="index.html"><img src="favicon.svg" alt="" width="32" height="32"> CSC Desk</a>' +
         '<nav aria-label="Main"><a href="index.html"' + (here === 'index.html' ? ' aria-current="page"' : '') + '>Home</a>' +
         '<a href="index.html#tools">Tools</a><a href="index.html#links">Portal Links</a></nav></div>';
-      bgPicker(h);
+      themePicker(h);
     }
+    hdrHeight();
     var f = $('#site-footer');
     if (f && !f.firstChild) {
       f.innerHTML = '<div class="ftr"><span>&copy; ' + new Date().getFullYear() + ' CSC Desk. Free tools for CSC operators and cyber cafes.</span>' +
@@ -167,6 +199,7 @@
 
   function home() {
     quickLinks();
+    var lb = $('#ledger-btn'); if (lb && SHOP_LEDGER_URL) { lb.href = SHOP_LEDGER_URL; lb.hidden = false; }
     var list = $('#tool-list'); if (!list) return;
     var cats = $('#cats'), side = $('#category-list'), q = $('#tool-search');
     var active = 'all';
@@ -248,30 +281,32 @@
     return new Promise(function (res) { canvas.toBlob(res, type || 'image/png', q); });
   };
 
-  /* Encode a canvas to a Blob no bigger than maxKB. JPEG quality is searched first, then the image is scaled down. */
-  CSC.fitToKB = async function (canvas, maxKB, minKB) {
-    var max = maxKB * 1024, work = canvas;
-    function flat(c) { // JPEG has no transparency, so paint white behind it
-      var f = document.createElement('canvas'); f.width = c.width; f.height = c.height;
-      var x = f.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, f.width, f.height); x.drawImage(c, 0, 0); return f;
+  /* Encode a canvas to a JPEG Blob no bigger than maxKB.
+     Clear mode (default): keeps JPEG quality at or above opt.minQ (0.5) and shrinks the picture gently only if needed, with high quality resampling.
+     opt.keepDims: never change pixel size; quality is lowered instead (can look soft at tiny limits). */
+  CSC.fitToKB = async function (canvas, maxKB, minKB, opt) {
+    opt = opt || {}; var max = maxKB * 1024, minQ = opt.minQ || 0.5;
+    var base = document.createElement('canvas'); base.width = canvas.width; base.height = canvas.height;
+    var bx = base.getContext('2d'); bx.fillStyle = '#fff'; bx.fillRect(0, 0, base.width, base.height); bx.drawImage(canvas, 0, 0); // JPEG has no transparency
+    function scaled(k) {
+      if (k >= 0.999) return base;
+      var c = document.createElement('canvas'); c.width = Math.max(8, Math.round(base.width * k)); c.height = Math.max(8, Math.round(base.height * k));
+      var x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high'; x.drawImage(base, 0, 0, c.width, c.height); return c;
     }
-    work = flat(canvas);
-    for (var round = 0; round < 12; round++) {
-      var lo = 0.05, hi = 0.95, best = null;
-      var top = await CSC.canvasBlob(work, 'image/jpeg', hi);
-      if (top.size <= max) {
-        // Smaller than needed already. If a minimum is asked for, we keep top quality (cannot honestly pad).
-        return top;
-      }
-      for (var i = 0; i < 8; i++) {
-        var mid = (lo + hi) / 2, b = await CSC.canvasBlob(work, 'image/jpeg', mid);
-        if (b.size <= max) { best = b; lo = mid; } else hi = mid;
-      }
-      if (best) return best;
-      var nw = document.createElement('canvas'); nw.width = Math.max(8, Math.round(work.width * 0.85)); nw.height = Math.max(8, Math.round(work.height * 0.85));
-      nw.getContext('2d').drawImage(work, 0, 0, nw.width, nw.height); work = nw;
+    async function search(c, lo, hi) {
+      var top = await CSC.canvasBlob(c, 'image/jpeg', hi); if (top.size <= max) return { ok: top };
+      var bot = await CSC.canvasBlob(c, 'image/jpeg', lo); if (bot.size > max) return { fail: bot };
+      var best = bot; for (var i = 0; i < 7; i++) { var mid = (lo + hi) / 2, b = await CSC.canvasBlob(c, 'image/jpeg', mid); if (b.size <= max) { best = b; lo = mid; } else hi = mid; }
+      return { ok: best };
     }
-    return CSC.canvasBlob(work, 'image/jpeg', 0.05);
+    var r = await search(base, opt.keepDims ? 0.03 : minQ, 0.95);
+    if (r.ok) return r.ok; if (opt.keepDims) return r.fail;
+    var k = 1, size = r.fail.size;
+    for (var round = 0; round < 10; round++) {
+      k = Math.max(0.04, Math.min(k * 0.95, k * Math.sqrt(max / size) * 1.03));
+      r = await search(scaled(k), minQ, 0.95); if (r.ok) return r.ok; size = r.fail.size;
+    }
+    return (await search(scaled(k * 0.6), 0.03, 0.6)).ok || r.fail;
   };
 
   CSC.download = function (blob, name) {
@@ -302,45 +337,84 @@
     return box;
   };
 
-  /* Interactive crop box on an image. Returns {el, setAspect(r), getCanvas(w,h), rect()} */
+  /* Interactive crop box with 4 corner + 4 edge handles. Returns {el, setAspect(r), getCanvas(w,h), rect()} */
   CSC.cropper = function (img, o) {
     o = o || {};
     var maxW = o.maxWidth || 520, scale = Math.min(1, maxW / img.naturalWidth);
     var cw = Math.round(img.naturalWidth * scale), ch = Math.round(img.naturalHeight * scale);
     var cv = CSC.h('canvas', { width: cw, height: ch }), ctx = cv.getContext('2d');
     var wrap = CSC.h('div', { class: 't-crop' }, cv);
-    var aspect = o.aspect || 0, r = { x: 0, y: 0, w: cw, h: ch }, drag = null;
+    var aspect = o.aspect || 0, r = { x: 0, y: 0, w: cw, h: ch }, drag = null, MIN = 12;
     function fit() {
       if (!aspect) { r = { x: cw * 0.05, y: ch * 0.05, w: cw * 0.9, h: ch * 0.9 }; return; }
       var w = cw * 0.9, h = w / aspect; if (h > ch * 0.9) { h = ch * 0.9; w = h * aspect; }
       r = { x: (cw - w) / 2, y: (ch - h) / 2, w: w, h: h };
+    }
+    function handles() {
+      var x = r.x, y = r.y, w = r.w, h = r.h;
+      return [{ k: 'nw', x: x, y: y, c: 'nwse-resize' }, { k: 'ne', x: x + w, y: y, c: 'nesw-resize' }, { k: 'se', x: x + w, y: y + h, c: 'nwse-resize' }, { k: 'sw', x: x, y: y + h, c: 'nesw-resize' },
+      { k: 'n', x: x + w / 2, y: y, c: 'ns-resize' }, { k: 'e', x: x + w, y: y + h / 2, c: 'ew-resize' }, { k: 's', x: x + w / 2, y: y + h, c: 'ns-resize' }, { k: 'w', x: x, y: y + h / 2, c: 'ew-resize' }];
     }
     function draw() {
       ctx.clearRect(0, 0, cw, ch); ctx.drawImage(img, 0, 0, cw, ch);
       ctx.fillStyle = 'rgba(0,0,0,.5)';
       ctx.fillRect(0, 0, cw, r.y); ctx.fillRect(0, r.y + r.h, cw, ch - r.y - r.h);
       ctx.fillRect(0, r.y, r.x, r.h); ctx.fillRect(r.x + r.w, r.y, cw - r.x - r.w, r.h);
+      ctx.strokeStyle = 'rgba(255,255,255,.45)'; ctx.lineWidth = 1; ctx.beginPath();
+      for (var i = 1; i < 3; i++) { ctx.moveTo(r.x + r.w * i / 3, r.y); ctx.lineTo(r.x + r.w * i / 3, r.y + r.h); ctx.moveTo(r.x, r.y + r.h * i / 3); ctx.lineTo(r.x + r.w, r.y + r.h * i / 3); } ctx.stroke();
       ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.strokeRect(r.x, r.y, r.w, r.h);
-      ctx.fillStyle = '#fff'; var s = 9; ctx.fillRect(r.x + r.w - s, r.y + r.h - s, s * 2, s * 2);
+      handles().forEach(function (hd) {
+        var corner = hd.k.length === 2, s = corner ? 8 : 6;
+        ctx.fillStyle = '#fff'; ctx.strokeStyle = '#0b5c3b'; ctx.lineWidth = 2;
+        if (corner) { ctx.fillRect(hd.x - s, hd.y - s, s * 2, s * 2); ctx.strokeRect(hd.x - s, hd.y - s, s * 2, s * 2); }
+        else { var hw = hd.k === 'n' || hd.k === 's', bw = hw ? 14 : 6, bh = hw ? 6 : 14; ctx.fillRect(hd.x - bw, hd.y - bh, bw * 2, bh * 2); ctx.strokeRect(hd.x - bw, hd.y - bh, bw * 2, bh * 2); }
+      });
     }
-    function pt(e) { var b = cv.getBoundingClientRect(); return { x: (e.clientX - b.left) * cw / b.width, y: (e.clientY - b.top) * ch / b.height }; }
-    function clamp() { r.w = Math.max(10, Math.min(r.w, cw)); r.h = Math.max(10, Math.min(r.h, ch)); r.x = Math.max(0, Math.min(r.x, cw - r.w)); r.y = Math.max(0, Math.min(r.y, ch - r.h)); }
+    function pt(e) { var b = cv.getBoundingClientRect(); return { x: (e.clientX - b.left) * cw / b.width, y: (e.clientY - b.top) * ch / b.height, k: cw / b.width }; }
+    function clamp() { r.w = Math.max(MIN, Math.min(r.w, cw)); r.h = Math.max(MIN, Math.min(r.h, ch)); r.x = Math.max(0, Math.min(r.x, cw - r.w)); r.y = Math.max(0, Math.min(r.y, ch - r.h)); }
+    function pick(p) {
+      var hit = 16 * p.k, hs = handles(), best = null, bd = 1e9;
+      hs.forEach(function (hd) { var d = Math.max(Math.abs(p.x - hd.x), Math.abs(p.y - hd.y)); if (d < hit && d < bd - (hd.k.length === 2 ? 4 : 0)) { best = hd; bd = d; } });
+      return best;
+    }
+    function resize(k, p, r0) {
+      var L = k.indexOf('w') > -1, R = k.indexOf('e') > -1, T = k.indexOf('n') > -1, B = k.indexOf('s') > -1;
+      var px = Math.max(0, Math.min(cw, p.x)), py = Math.max(0, Math.min(ch, p.y));
+      if (!aspect) {
+        var x1 = r0.x, x2 = r0.x + r0.w, y1 = r0.y, y2 = r0.y + r0.h;
+        if (L) x1 = Math.min(px, x2 - MIN); if (R) x2 = Math.max(px, x1 + MIN); if (T) y1 = Math.min(py, y2 - MIN); if (B) y2 = Math.max(py, y1 + MIN);
+        r = { x: x1, y: y1, w: x2 - x1, h: y2 - y1 }; return;
+      }
+      var w, h, ax, ay;
+      if (k.length === 2) { // corner: opposite corner stays fixed
+        ax = L ? r0.x + r0.w : r0.x; ay = T ? r0.y + r0.h : r0.y;
+        w = Math.max(Math.abs(px - ax), Math.abs(py - ay) * aspect);
+        var rx = L ? ax : cw - ax, ry = T ? ay : ch - ay;
+        w = Math.max(MIN, Math.min(w, rx, ry * aspect)); h = w / aspect;
+        r = { x: L ? ax - w : ax, y: T ? ay - h : ay, w: w, h: h };
+      } else if (L || R) { // side edge: grow around the vertical centre
+        ax = L ? r0.x + r0.w : r0.x; w = Math.max(MIN, Math.min(Math.abs(px - ax), L ? ax : cw - ax, ch * aspect)); h = w / aspect;
+        r = { x: L ? ax - w : ax, y: r0.y + r0.h / 2 - h / 2, w: w, h: h };
+      } else { // top/bottom edge: grow around the horizontal centre
+        ay = T ? r0.y + r0.h : r0.y; h = Math.max(MIN, Math.min(Math.abs(py - ay), T ? ay : ch - ay, cw / aspect)); w = h * aspect;
+        r = { x: r0.x + r0.w / 2 - w / 2, y: T ? ay - h : ay, w: w, h: h };
+      }
+      clamp();
+    }
     cv.addEventListener('pointerdown', function (e) {
-      var p = pt(e); cv.setPointerCapture(e.pointerId);
-      if (Math.abs(p.x - (r.x + r.w)) < 22 && Math.abs(p.y - (r.y + r.h)) < 22) drag = { m: 'size' };
+      var p = pt(e); cv.setPointerCapture(e.pointerId); var hd = pick(p);
+      if (hd) drag = { m: 'size', k: hd.k, r0: { x: r.x, y: r.y, w: r.w, h: r.h } };
       else if (p.x > r.x && p.x < r.x + r.w && p.y > r.y && p.y < r.y + r.h) drag = { m: 'move', dx: p.x - r.x, dy: p.y - r.y };
-      else { drag = { m: 'new', sx: p.x, sy: p.y }; }
+      else drag = { m: 'new', sx: p.x, sy: p.y };
     });
     cv.addEventListener('pointermove', function (e) {
-      if (!drag) return; var p = pt(e);
+      var p = pt(e);
+      if (!drag) { var hd = pick(p); cv.style.cursor = hd ? hd.c : (p.x > r.x && p.x < r.x + r.w && p.y > r.y && p.y < r.y + r.h) ? 'move' : 'crosshair'; return; }
       if (drag.m === 'move') { r.x = p.x - drag.dx; r.y = p.y - drag.dy; clamp(); }
-      else if (drag.m === 'size') {
-        r.w = Math.max(10, p.x - r.x); r.h = aspect ? r.w / aspect : Math.max(10, p.y - r.y);
-        if (r.x + r.w > cw) { r.w = cw - r.x; if (aspect) r.h = r.w / aspect; }
-        if (r.y + r.h > ch) { r.h = ch - r.y; if (aspect) r.w = r.h * aspect; }
-      } else {
+      else if (drag.m === 'size') resize(drag.k, p, drag.r0);
+      else {
         var w = Math.abs(p.x - drag.sx), h = aspect ? w / aspect : Math.abs(p.y - drag.sy);
-        r = { x: Math.min(drag.sx, p.x), y: aspect ? (p.y < drag.sy ? drag.sy - h : drag.sy) : Math.min(drag.sy, p.y), w: Math.max(10, w), h: Math.max(10, h) };
+        r = { x: Math.min(drag.sx, p.x), y: aspect ? (p.y < drag.sy ? drag.sy - h : drag.sy) : Math.min(drag.sy, p.y), w: Math.max(MIN, w), h: Math.max(MIN, h) };
         if (aspect && p.x < drag.sx) r.x = drag.sx - r.w; clamp();
       }
       draw(); if (o.onChange) o.onChange();
@@ -352,11 +426,20 @@
       setAspect: function (a) { aspect = a || 0; fit(); draw(); if (o.onChange) o.onChange(); },
       rect: function () { var k = 1 / scale; return { x: r.x * k, y: r.y * k, w: r.w * k, h: r.h * k }; },
       getCanvas: function (w, h) {
-        var k = 1 / scale, c = document.createElement('canvas'), rr = this.rect();
+        var c = document.createElement('canvas'), rr = this.rect();
         c.width = w || Math.round(rr.w); c.height = h || Math.round(rr.h);
-        c.getContext('2d').drawImage(img, rr.x, rr.y, rr.w, rr.h, 0, 0, c.width, c.height); return c;
+        var x = c.getContext('2d'); x.imageSmoothingEnabled = true; x.imageSmoothingQuality = 'high';
+        x.drawImage(img, rr.x, rr.y, rr.w, rr.h, 0, 0, c.width, c.height); return c;
       }
     };
+  };
+
+  /* Draw a solid frame inside the edges of a canvas (size of the picture stays exactly the same). */
+  CSC.addFrame = function (c, px, color) {
+    px = Math.max(1, Math.min(5, Math.round(px) || 1)); var x = c.getContext('2d');
+    x.save(); x.globalCompositeOperation = 'source-over'; x.fillStyle = color || '#000';
+    x.fillRect(0, 0, c.width, px); x.fillRect(0, c.height - px, c.width, px); x.fillRect(0, px, px, c.height - 2 * px); x.fillRect(c.width - px, px, px, c.height - 2 * px);
+    x.restore(); return c;
   };
 
   /* Print an HTML string in an isolated frame (keeps the page UI out of the printout). */

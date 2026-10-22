@@ -3,7 +3,7 @@
   --brand:#0b5c3b; --brand-strong:#073d27; --on-brand:#fff;
   --soft:#e3f3ea; --line:#d5dce4; --muted:#5d6b7a; --text:#1b2430;
   --surface:#fff; --bg:#f4f7f6; --danger:#b3261e; --warn:#8a5a00;
-  --shadow:0 2px 8px rgba(0,0,0,.06); --radius:12px;
+  --shadow:0 2px 8px rgba(0,0,0,.06); --radius:12px; --hdr-h:64px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -125,9 +125,27 @@ textarea{min-height:80px;resize:vertical}
 .bgpick{position:relative}
 .bgbtn{background:rgba(255,255,255,.18);color:#fff;border:0;border-radius:6px;padding:6px 12px;font:inherit;font-weight:600;font-size:.95rem;cursor:pointer}
 .bgbtn:hover{background:rgba(255,255,255,.3)}
-.bgmenu{position:absolute;right:0;top:calc(100% + 8px);background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.2);padding:10px;display:flex;flex-wrap:wrap;gap:8px;width:196px;z-index:60}
+.bgmenu{position:absolute;right:0;top:calc(100% + 8px);background:#fff;color:var(--text);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,.2);padding:10px;display:flex;flex-wrap:wrap;gap:8px;width:212px;z-index:60}
+.bgttl{flex:0 0 100%;font-size:.78rem;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.bgreset{flex:0 0 100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:8px;padding:6px;font:inherit;font-size:.85rem;font-weight:600;cursor:pointer}
+.bgreset:hover{background:var(--soft)}
 .bgmenu[hidden]{display:none}
 .bgmenu .sw{width:34px;height:34px;border-radius:50%;border:2px solid #b9c3cf;cursor:pointer;padding:0}
 .bgmenu .sw:hover,.bgmenu .sw:focus-visible{border-color:var(--brand)}
 .bgmenu .swc{width:34px;height:34px;border-radius:50%;overflow:hidden;border:2px solid #b9c3cf;display:block;cursor:pointer;background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)}
 .bgmenu .swc input{opacity:0;width:100%;height:100%;cursor:pointer;padding:0;border:0}
+
+/* Shop Ledger announcement (home) */
+.ledger-banner{display:grid;grid-template-columns:1fr 340px;gap:20px;align-items:center;background:var(--surface);border:2px solid var(--brand);border-radius:16px;padding:20px 24px;margin-top:18px;box-shadow:var(--shadow)}
+.ledger-banner .tag{display:inline-block;background:var(--brand);color:#fff;border-radius:999px;padding:2px 12px;font-size:.8rem;font-weight:800;margin-bottom:8px}
+.ledger-banner h2{margin:0 0 6px;color:var(--brand);font-size:1.5rem}
+.ledger-banner p{margin:0 0 12px;color:var(--text)}
+.ledger-banner img{width:100%;height:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 4px 14px rgba(0,0,0,.12)}
+@media(max-width:760px){.ledger-banner{grid-template-columns:1fr}.ledger-banner img{order:-1;max-width:420px;margin:0 auto}}
+
+/* Three-column tool layout: options | crop | result (side by side) */
+.t-grid3{display:grid;grid-template-columns:minmax(250px,300px) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.pane-t{margin:0 0 10px;font-size:1rem;color:var(--brand)}
+.t-grid3 .t-preview img,.t-grid3 .t-preview canvas{max-width:100%;height:auto}
+@media(max-width:1020px){.t-grid3{grid-template-columns:1fr 1fr}.t-grid3>.opt{grid-column:1/-1}}
+@media(max-width:640px){.t-grid3{grid-template-columns:1fr}}

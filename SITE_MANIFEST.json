@@ -1,0 +1,45 @@
+{
+  "project": "CSC VLE TOOLS",
+  "brandVersion": "1.0",
+  "foundationVersion": "1.2",
+  "visualIdentity": {
+    "primary": "#1a3fa6",
+    "strong": "#0f2a73",
+    "accent": "#ff9800",
+    "surface": "#ffffff",
+    "style": "royal blue and saffron"
+  },
+  "sharedStyles": [
+    "assets/css/portal.css",
+    "assets/css/csc-system.css"
+  ],
+  "homeStyles": [
+    "assets/css/home.css"
+  ],
+  "sharedLogic": "assets/js/site.js",
+  "starterTemplate": "TEMPLATE_STARTER.html",
+  "guide": "GLOBAL_SYSTEM_GUIDE.md",
+  "targetScale": "100+ static tool pages using shared styles and reusable templates",
+  "deploymentStatus": "ready for GitHub Pages",
+  "compatibilityPolicy": "Preserve existing tool logic while migrating page templates in audited batches.",
+  "integratedTools": [
+    "shop-ledger.html",
+    "pro-studio.html"
+  ],
+  "siteUrl": "https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/",
+  "pages": [
+    "index.html",
+    "feedback.html",
+    "contact.html",
+    "about.html",
+    "disclaimer.html",
+    "privacy.html",
+    "404.html"
+  ],
+  "seo": [
+    "sitemap.xml",
+    "robots.txt",
+    "site.webmanifest",
+    "og-image.png"
+  ]
+}

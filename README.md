@@ -1,2 +1,9 @@
-# cschelpdesk.github.io
-CSC Desk: free online tools for CSC VLE operators and cyber cafes. Resume, biodata, rent agreement, salary slip, invoice, passport photo sheet, ID card print, bill receipt, PDF and image tools, calculators, and quick links to official portals.
+# CSC VLE TOOLS
+
+### Free online tools for CSC & VLE centres
+
+Photo and signature resizer, ID card and passport photo print, PDF tools, resumes, application formats, calculators, Shop Ledger and Pro Studio. Runs in the browser, built for static hosting on GitHub Pages.
+
+Live site: https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/
+
+See `SETUP_GUIDE.md` for how to publish and where to add your email, phone and social links.

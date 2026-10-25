@@ -1,140 +1,170 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>CSC Desk: Free Tools for CSC VLEs and Cyber Cafes</title>
-  <meta name="description" content="Free printable tools for CSC operators and cyber cafes: resume, biodata, rent agreement, salary slip, photo sheets, receipts and quick links to official portals.">
-  <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;800&display=swap">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CSC VLE TOOLS | Free Photo, PDF & ID Card Tools for CSC Centres</title>
+  <meta name="description" content="Free online tools for CSC & VLE centres: photo & signature resizer, passport photo sheet, PAN/Aadhaar print, PDF merge, resumes, applications and calculators.">
+  <meta name="keywords" content="CSC VLE tools, VLE tools, CSC center tools, photo resizer, signature resizer, passport photo maker, PAN card print, Aadhaar card print, ID card print, PDF merge, PDF split, JPG to PDF, Haryana resume, application format, affidavit format, loan EMI calculator, age calculator, shop ledger, Pro Studio, Rohtak, free online tools">
+  <meta name="author" content="CSC VLE TOOLS">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+  <meta name="theme-color" content="#1a3fa6">
+  <meta name="application-name" content="CSC VLE TOOLS">
+  <meta name="apple-mobile-web-app-title" content="CSC VLE TOOLS">
+  <meta name="geo.region" content="IN-HR"><meta name="geo.placename" content="Rohtak, Haryana"><meta name="language" content="English">
+  <link rel="canonical" href="https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/">
+  <meta property="og:type" content="website"><meta property="og:site_name" content="CSC VLE TOOLS"><meta property="og:locale" content="en_IN">
+  <meta property="og:title" content="CSC VLE TOOLS | Free Photo, PDF & ID Card Tools for CSC Centres"><meta property="og:description" content="Free online tools for CSC & VLE centres: photo & signature resizer, passport photo sheet, PAN/Aadhaar print, PDF merge, resumes, applications and calculators.">
+  <meta property="og:url" content="https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/"><meta property="og:image" content="https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="CSC VLE TOOLS - free tools for CSC and VLE centres">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="CSC VLE TOOLS | Free Photo, PDF & ID Card Tools for CSC Centres"><meta name="twitter:description" content="Free online tools for CSC & VLE centres: photo & signature resizer, passport photo sheet, PAN/Aadhaar print, PDF merge, resumes, applications and calculators."><meta name="twitter:image" content="https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/og-image.png">
+  <link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="site.webmanifest">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="assets/css/portal.css">
-  <style>
-    .portal-workspace {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 24px;
-      align-items: start;
-      margin-top: 20px;
-    }
-    .categories-sidebar {
-      background: var(--surface, #ffffff);
-      border: 1px solid var(--line, #d5dce4);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: var(--shadow, 0 2px 8px rgba(0,0,0,0.05));
-      position: sticky;
-      top: calc(var(--hdr-h, 64px) + 16px);
-      z-index: 1;
-      max-height: calc(100vh - var(--hdr-h, 64px) - 32px);
-      overflow-y: auto;
-      overscroll-behavior: contain;
-    }
-    .categories-sidebar h3 {
-      margin-top: 0;
-      font-size: 1.05rem;
-      color: var(--brand, #0b5c3b);
-      border-bottom: 2px solid var(--brand, #0b5c3b);
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .category-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    .category-list li {
-      margin-bottom: 6px;
-    }
-    .category-list a {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      color: var(--text, #1b2430);
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      transition: background 0.2s, color 0.2s;
-    }
-    .category-list a:hover {
-      background: var(--soft, #e3f3ea);
-      color: var(--brand, #0b5c3b);
-    }
-    .category-list span.count {
-      background: var(--line, #d5dce4);
-      color: var(--muted, #5d6b7a);
-      border-radius: 12px;
-      padding: 2px 8px;
-      font-size: 0.75rem;
-    }
-    @media (max-width: 950px) {
-      .portal-workspace {
-        grid-template-columns: 1fr;
-      }
-      .categories-sidebar {
-        position: static;
-        max-height: none;
-        overflow: visible;
-        margin-top: 20px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="assets/css/csc-system.css">
+  <link rel="stylesheet" href="assets/css/home.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "CSC VLE TOOLS", "alternateName": "CSC VLE Tools Pro Portal", "url": "https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/", "description": "Free online tools for CSC and VLE centres: photo and signature resizer, ID card print, PDF tools, resumes, applications and calculators.", "inLanguage": "en-IN", "publisher": {"@id": "https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/#org"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "@id": "https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/#org", "name": "CSC VLE TOOLS", "url": "https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/", "logo": "https://csc-vle-tools-desk.github.io/CSC-VLE-TOOLS/icon-512.png", "sameAs": ["https://github.com/CSC-VLE-TOOLS-DESK"], "areaServed": "IN", "address": {"@type": "PostalAddress", "addressLocality": "Rohtak", "addressRegion": "Haryana", "addressCountry": "IN"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is CSC VLE TOOLS?", "acceptedAnswer": {"@type": "Answer", "text": "CSC VLE TOOLS is a free collection of browser-based tools made for CSC and VLE centres, cyber cafes, students and job seekers. It includes a photo and signature resizer, passport photo sheets, ID card and PAN/Aadhaar print layouts, PDF tools, resume and application formats, billing tools and calculators."}}, {"@type": "Question", "name": "Are these tools really free to use?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every tool on the site is free to use, and no sign-up or login is needed."}}, {"@type": "Question", "name": "Are my photos and documents uploaded to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. The tools run inside your own browser, so your photos, signatures and documents are not uploaded to our servers. A few tools load helper libraries or OCR language data from public CDNs when you open them, which needs an internet connection."}}, {"@type": "Question", "name": "How do I resize a photo or signature to an exact size in KB for a form?", "acceptedAnswer": {"@type": "Answer", "text": "Open the Photo Resizer or Signature Resizer, upload your image, enter the required width, height and maximum file size in KB, then download the result. The same method works for thumb impression images."}}, {"@type": "Question", "name": "Can I print PAN, Aadhaar and other ID cards at actual size?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Use the PAN & Aadhaar Print, PVC ID Card Print and ID Card Print tools. They place the front and back of a card at standard card size on an A4 sheet so it can be printed and cut."}}, {"@type": "Question", "name": "Is CSC VLE TOOLS an official government website?", "acceptedAnswer": {"@type": "Answer", "text": "No. It is an independent project and is not connected to CSC e-Governance Services India Ltd, UIDAI or any government department. Official portal links on this page open the original government and service websites."}}]}</script>
+  <script src="assets/js/site.js" defer></script>
 </head>
-<body>
+<body class="home-page">
   <a class="skip-link" href="#main">Skip to content</a>
   <header id="site-header"></header>
-  
+
+  <!-- Scrolling tagline (right to left). Edit the text inside .tg-seq to change the message; it repeats automatically. -->
+  <div id="tagline-band" class="tagline-band no-print" role="region" aria-label="Message from CSC VLE TOOLS">
+    <span class="tg-badge"><i class="fa-solid fa-heart" aria-hidden="true"></i> LOVE &amp; SHARE</span>
+    <div class="tg-view"><div class="tg-track"><div class="tg-seq">
+      <span class="tg-i"><i class="fa-solid fa-heart tg-heart" aria-hidden="true"></i> Please show your love for CSC VLE TOOLS and give us your <a href="feedback.html">feedback &amp; suggestions</a>.</span>
+      <span class="tg-i" lang="hi"><i class="fa-solid fa-heart tg-heart" aria-hidden="true"></i> कृपया CSC VLE TOOLS को अपना प्यार दें और अपना <a href="feedback.html">फीडबैक व सुझाव</a> ज़रूर भेजें।</span>
+      <span class="tg-i"><i class="fa-solid fa-bell tg-bell" aria-hidden="true"></i> <a href="#follow">Subscribe &amp; follow our social links</a> <span class="tg-soc" data-social-list="soc-a tg-ic"></span> and never miss a new tool.</span>
+      <span class="tg-i" lang="hi"><i class="fa-solid fa-bell tg-bell" aria-hidden="true"></i> हमारे <a href="#follow">सोशल लिंक को सब्सक्राइब व फ़ॉलो करें</a> और कोई भी नया टूल न चूकें।</span>
+    </div></div></div>
+    <button class="tg-pause" type="button" aria-pressed="false" aria-label="Pause scrolling message"><i class="fa-solid fa-pause" aria-hidden="true"></i></button>
+  </div>
+
   <main id="main">
-    <section class="hero hero-card">
-      <h1>Every counter job, one desk.</h1>
-      <p>Print-ready documents, PDF tools, photo resizers, calculators, application formats, and portal quick links for CSC VLEs.</p>
-      <label class="search" for="tool-search">
-        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-        <input type="search" id="tool-search" placeholder="Search tools: photo resizer, PDF merge, resume, EMI..." autocomplete="off">
-      </label>
-      <div class="stats">
-        <span><b><span id="tool-count">0</span> working tools</b></span>
-        <span>Opens on any mobile, tablet or PC</span>
-      </div>
-    </section>
-
-    <section class="ledger-banner" aria-label="Shop Ledger app">
+    <section class="hs" aria-labelledby="home-title">
       <div>
-        <span class="tag"><i class="fa-solid fa-star" aria-hidden="true"></i> Long awaited</span>
-        <h2>Shop Ledger App</h2>
-        <p>The long-awaited Shop Ledger app is here for all CSC Mitras and everyday users. Keep daily sales, udhaar and customer accounts in one simple place.</p>
-        <a class="btn" id="ledger-btn" href="#" hidden target="_blank" rel="noopener"><i class="fa-solid fa-book" aria-hidden="true"></i> Open Shop Ledger</a>
+        <span class="hs-badge"><i class="fa-solid fa-bolt" aria-hidden="true"></i> PRO PORTAL FOR CSC &amp; VLE CENTRES</span>
+        <h1 id="home-title">Every tool your <em>CSC centre</em> needs, in one place.</h1>
+        <p class="sub">Resize photos and signatures, print ID cards, merge PDFs, make resumes and applications, and manage your shop. Free, fast and private, right in your browser.</p>
+        <div class="hs-cta">
+          <a class="btn-accent" href="#tools"><i class="fa-solid fa-table-cells" aria-hidden="true"></i> Explore All Tools</a>
+          <a class="btn-ghost" href="pro-studio.html"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Launch Pro Studio</a>
+        </div>
+        <div class="hs-trust"><span>100% free</span><span>No sign-up</span><span>Files stay on your device</span><span>Works on mobile</span></div>
       </div>
-      <img src="assets/img/shop-ledger.svg" alt="Shop Ledger app screen showing today sale, udhaar and recent entries" width="360" height="260" loading="lazy">
+      <div class="hs-art" aria-hidden="true">
+        <div class="hs-stack">
+          <div class="hs-card c1"><span class="ic"><i class="fa-solid fa-id-card"></i></span><span>ID Card Print<small>Front + back on A4</small></span></div>
+          <div class="hs-card c2"><span class="ic"><i class="fa-solid fa-file-pdf"></i></span><span>PDF Merge &amp; Split<small>Ready in seconds</small></span></div>
+          <div class="hs-card c3"><span class="ic"><i class="fa-solid fa-crop-simple"></i></span><span>Photo Resizer<small>Exact pixels and KB</small></span></div>
+        </div>
+      </div>
     </section>
 
-    <div class="portal-workspace">
-      <div class="main-column">
-        <h2 class="section-title" id="tools"><i class="fa-solid fa-toolbox" aria-hidden="true"></i> Tools & Applications</h2>
-        <div class="cats" id="cats" role="group" aria-label="Filter by category"></div>
-        <div class="tool-list" id="tool-list" aria-live="polite"></div>
-
-        <h2 class="section-title" id="links" style="margin-top: 36px;"><i class="fa-solid fa-bolt" aria-hidden="true"></i> Official Portal Quick Links</h2>
-        <div class="quick-grid" id="quick-links"></div>
+    <!-- Daily Use Apps: 4 cards in one row. Edit names/links here. -->
+    <section class="du" id="daily-use" aria-labelledby="du-t">
+      <h2 class="du-t" id="du-t"><i class="fa-solid fa-star" aria-hidden="true"></i> Daily Use Apps</h2>
+      <p class="du-s">Open every day: photos, trading record, home budget and applications.</p>
+      <div class="du-row">
+        <a class="du-card du1" href="pro-studio.html"><span class="du-i"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i></span><strong>Pro Studio</strong><small>Photo, sign &amp; document</small><em>Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></em></a>
+        <a class="du-card du2" href="stock-ledger.html"><span class="du-i"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span><strong>Stock Ledger</strong><small>Option, Future &amp; Stock P&amp;L</small><em>Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></em></a>
+        <a class="du-card du3" href="house-expense.html"><span class="du-i"><i class="fa-solid fa-house-chimney" aria-hidden="true"></i></span><strong>House Expense</strong><small>Daily, monthly, yearly</small><em>Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></em></a>
+        <a class="du-card du4" href="haryana-application-generator.html"><span class="du-i"><i class="fa-solid fa-file-signature" aria-hidden="true"></i></span><strong>Haryana Apply</strong><small>English &amp; Hindi letters</small><em>Open <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></em></a>
       </div>
+    </section>
 
-      <aside class="categories-sidebar" aria-label="Categories Section">
-        <h3><i class="fa-solid fa-layer-group"></i> Categories</h3>
-        <ul class="category-list" id="category-list"></ul>
-      </aside>
+
+    <div class="sband">
+      <label class="sbox" for="tool-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input id="tool-search" type="search" placeholder="Search a tool: photo resizer, PDF merge, EMI, resume..." autocomplete="off" aria-label="Search tools">
+        <span class="go">Search</span></label>
     </div>
+
+    <div class="stats-strip" aria-label="Site highlights">
+      <div class="stat"><b id="tool-count">58</b><span>Ready-to-use tools</span></div>
+      <div class="stat"><b>Free</b><span>No login, no charges</span></div>
+      <div class="stat"><b>Private</b><span>Runs in your browser</span></div>
+      <div class="stat"><b>Mobile</b><span>Works on phone &amp; PC</span></div>
+    </div>
+
+    <h2 class="sec-t"><i class="fa-solid fa-fire" aria-hidden="true"></i> Most Used Tools</h2>
+    <p class="sec-s">The tools CSC operators open every day.</p>
+    <nav class="qt" aria-label="Most used tools">
+      <a class="qtile" href="tools_photo_resizer.html"><span class="qi"><i class="fa-solid fa-crop-simple" aria-hidden="true"></i></span><span><strong>Photo Resizer</strong><small>Exact size and KB limit</small></span></a>
+      <a class="qtile" href="tools_pan_aadhaar_print.html"><span class="qi"><i class="fa-solid fa-address-card" aria-hidden="true"></i></span><span><strong>PAN &amp; Aadhaar Print</strong><small>Actual size, front and back</small></span></a>
+      <a class="qtile" href="tools_ai_passport_studio.html"><span class="qi"><i class="fa-solid fa-user-large" aria-hidden="true"></i></span><span><strong>Passport Photo Sheet</strong><small>Cut lines and background</small></span></a>
+      <a class="qtile" href="tools_pdf_merger.html"><span class="qi"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></span><span><strong>PDF Merger</strong><small>Join PDFs into one</small></span></a>
+      <a class="qtile" href="haryana-resume-generator.html"><span class="qi"><i class="fa-solid fa-id-badge" aria-hidden="true"></i></span><span><strong>Resume Builder</strong><small>Haryana resume formats</small></span></a>
+      <a class="qtile" href="haryana-application-generator.html"><span class="qi"><i class="fa-solid fa-file-signature" aria-hidden="true"></i></span><span><strong>Application Generator</strong><small>English and Hindi letters</small></span></a>
+      <a class="qtile" href="tools_jpg_to_pdf.html"><span class="qi"><i class="fa-solid fa-file-image" aria-hidden="true"></i></span><span><strong>JPG to PDF</strong><small>Images to a single PDF</small></span></a>
+      <a class="qtile" href="tools_loan_emi_calculator.html"><span class="qi"><i class="fa-solid fa-indian-rupee-sign" aria-hidden="true"></i></span><span><strong>Loan EMI Calculator</strong><small>EMI and interest</small></span></a>
+    </nav>
+
+    <div class="ban2">
+      <section class="ban b1" aria-labelledby="ps-t"><span class="tag">PRO STUDIO</span><h3 id="ps-t">Pro Studio</h3><p>Document cropping, photo editing, ID card layouts and print tools in one powerful workspace.</p><a class="btn-w" href="pro-studio.html"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> Launch Pro Studio</a></section>
+      <section class="ban b2" aria-labelledby="sl-t"><span class="tag">FOR YOUR SHOP</span><h3 id="sl-t">Shop Ledger</h3><p>Track income, expenses, cash-in-hand and daily closing reports for your centre.</p><a class="btn-w" id="ledger-btn" href="shop-ledger.html"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Open Shop Ledger</a></section>
+    </div>
+
+    <h2 class="sec-t" id="tools"><i class="fa-solid fa-toolbox" aria-hidden="true"></i> All Tools</h2>
+    <p class="sec-s">Pick a category or search above. Every tool is free.</p>
+    <div class="workspace">
+      <div>
+        <div id="cats" class="cats" role="group" aria-label="Filter tools by category"></div>
+        <div id="tool-list" class="tool-list" aria-live="polite"></div>
+      </div>
+      <aside class="categories-sidebar" aria-label="Tool categories"><h3><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Categories</h3><ul id="category-list" class="category-list"></ul></aside>
+    </div>
+
+    <h2 class="sec-t"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i> Why CSC VLE TOOLS?</h2>
+    <p class="sec-s">Built by a CSC operator's needs: quick, simple and dependable.</p>
+    <div class="why">
+      <div><i class="fa-solid fa-gift" aria-hidden="true"></i><h3>Completely free</h3><p>No subscription, no login and no hidden charges for any tool.</p></div>
+      <div><i class="fa-solid fa-lock" aria-hidden="true"></i><h3>Private by design</h3><p>Tools work inside your browser. Your photos and documents are not uploaded to our servers.</p></div>
+      <div><i class="fa-solid fa-gauge-high" aria-hidden="true"></i><h3>Fast and light</h3><p>No heavy apps to install. Open a page and start working in seconds.</p></div>
+      <div><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i><h3>Phone and PC friendly</h3><p>Layouts adapt to mobile, tablet and desktop screens.</p></div>
+      <div><i class="fa-solid fa-print" aria-hidden="true"></i><h3>Print-ready output</h3><p>Actual-size card layouts, photo sheets and A4 documents ready to print.</p></div>
+      <div><i class="fa-solid fa-language" aria-hidden="true"></i><h3>English and Hindi</h3><p>Application letters and typing tests for both English and Hindi users.</p></div>
+    </div>
+
+    <h2 class="sec-t"><i class="fa-solid fa-list-check" aria-hidden="true"></i> How it works</h2>
+    <div class="steps">
+      <div><h3>Choose a tool</h3><p>Search or browse by category and open the tool you need.</p></div>
+      <div><h3>Add your file or details</h3><p>Upload a photo or PDF, or type in the required details.</p></div>
+      <div><h3>Download or print</h3><p>Save the result or print it straight from your browser.</p></div>
+    </div>
+
+    <h2 class="sec-t"><i class="fa-solid fa-hashtag" aria-hidden="true"></i> Popular Topics</h2>
+    <p class="sec-s">Quick shortcuts for the most searched jobs at a CSC centre.</p>
+    <div class="topics">
+      <a href="tools_photo_resizer.html">Resize photo for job form</a><a href="tools_sign_resizer.html">Signature resizer in KB</a><a href="tools_thumb_resizer.html">Thumb impression resizer</a>
+      <a href="tools_image_compressor.html">Compress image to 50 KB</a><a href="tools_ai_passport_studio.html">Passport size photo maker</a><a href="tools_pan_aadhaar_print.html">Aadhaar card print</a>
+      <a href="tools_pvc_id_print.html">PVC card print</a><a href="tools_pdf_merger.html">Merge PDF files</a><a href="tools_pdf_splitter.html">Split PDF pages</a>
+      <a href="tools_word_to_pdf.html">Word to PDF</a><a href="tools_pdf_compressor.html">Compress PDF to 200 KB</a><a href="tools_pdf_to_jpg.html">PDF to JPG</a><a href="haryana-resume-generator.html">Haryana resume format</a><a href="tools_affidavit_format.html">Affidavit format</a>
+      <a href="tools_agreement_format_generator.html">Rent agreement format</a><a href="tools_bank_application.html">Bank application letter</a><a href="tools_age_calculator.html">Age calculator for exams</a>
+      <a href="tools_typing_test.html">Hindi typing test</a><a href="tools_qr_code_generator.html">UPI QR code generator</a><a href="tools_invoice_generator.html">GST invoice generator</a>
+    </div>
+
+    <h2 class="sec-t" id="links"><i class="fa-solid fa-link" aria-hidden="true"></i> Official Portal Quick Links</h2>
+    <p class="sec-s">One tap to the portals you use daily. These open the official external websites.</p>
+    <div id="quick-links" class="quick-grid"></div>
+
+    <h2 class="sec-t"><i class="fa-solid fa-circle-question" aria-hidden="true"></i> Frequently Asked Questions</h2>
+    <div class="faq"><details><summary>What is CSC VLE TOOLS?</summary><p>CSC VLE TOOLS is a free collection of browser-based tools made for CSC and VLE centres, cyber cafes, students and job seekers. It includes a photo and signature resizer, passport photo sheets, ID card and PAN/Aadhaar print layouts, PDF tools, resume and application formats, billing tools and calculators.</p></details><details><summary>Are these tools really free to use?</summary><p>Yes. Every tool on the site is free to use, and no sign-up or login is needed.</p></details><details><summary>Are my photos and documents uploaded to a server?</summary><p>No. The tools run inside your own browser, so your photos, signatures and documents are not uploaded to our servers. A few tools load helper libraries or OCR language data from public CDNs when you open them, which needs an internet connection.</p></details><details><summary>How do I resize a photo or signature to an exact size in KB for a form?</summary><p>Open the Photo Resizer or Signature Resizer, upload your image, enter the required width, height and maximum file size in KB, then download the result. The same method works for thumb impression images.</p></details><details><summary>Can I print PAN, Aadhaar and other ID cards at actual size?</summary><p>Yes. Use the PAN & Aadhaar Print, PVC ID Card Print and ID Card Print tools. They place the front and back of a card at standard card size on an A4 sheet so it can be printed and cut.</p></details><details><summary>Is CSC VLE TOOLS an official government website?</summary><p>No. It is an independent project and is not connected to CSC e-Governance Services India Ltd, UIDAI or any government department. Official portal links on this page open the original government and service websites.</p></details></div>
+
+    <section class="cta" aria-labelledby="cta-t">
+      <div><h2 id="cta-t">Help us make it better</h2><p>Found a bug, need a new tool, or have an idea? Tell us. Your feedback decides what we build next.</p>
+        <div class="btn-row"><a class="btn-accent" href="feedback.html"><i class="fa-solid fa-comments" aria-hidden="true"></i> Send Feedback</a><a class="btn-ghost" href="contact.html"><i class="fa-solid fa-headset" aria-hidden="true"></i> Contact Us</a></div></div>
+      <div><div class="share-t">Share with other CSC operators</div><div class="share-row" data-share-list="soc-a"></div>
+        <div class="share-t" id="follow" style="margin-top:16px">Follow us</div><div class="soc" data-social-list="soc-a"></div></div>
+    </section>
   </main>
 
   <footer id="site-footer"></footer>
-  <script src="assets/js/site.js"></script>
+  <script src="assets/js/demo-mode.js"></script>
 </body>
 </html>

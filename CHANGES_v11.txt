@@ -1,0 +1,11 @@
+CSC VLE TOOLS v11 (from v10)
+HEADER: 3D multi-colour buttons (Home, Tools, Daily Use App, Quick Links, Feedback, Contact, Theme); logo is a 3D button; "Portal Links" renamed "Quick Links".
+HOME: Pro Studio / Shop Ledger removed from All Tools list (banners stay); duplicate PDF Merge / PDF Split hidden from list (pages still open); 3D colour boxes for stats, category buttons, Popular Topics; count now 58.
+NEW TOOLS: PDF Compressor / Resizer (tools_pdf_compressor), PDF to JPG / PNG (tools_pdf_to_jpg). Need pdf.js from cdnjs.
+PDF MERGER: output size As it is / High / Medium / Small. PDF SPLITTER: output size; extract range, single pages ZIP, N pages ZIP, JPG, PNG.
+FILE NAMES: all downloads and print-to-PDF titles start with CSC_VLE_TOOLS_.
+BIODATA: right sidebar (language, 5 templates, 6 border styles, colour); Add Section or Field; extra fields.
+COVER LETTER: Hindi/English, 4 styles, accent colour, Add Section or Field.
+APPLICATION GENERATOR: language/mode buttons centred.
+AFFIDAVIT: Add Section or Field. BANK APPLICATION: Aadhaar, PAN, ITR (optional), Add Field. RENT AGREEMENT: Add Field. ADMIT CARD: 2nd..5th exam on same day.
+TESTED: jsdom checks of the form pages. NOT TESTED: real browser look, PDF compress / PDF to JPG rendering (needs pdf.js).

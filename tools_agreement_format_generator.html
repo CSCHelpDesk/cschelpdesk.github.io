@@ -294,12 +294,7 @@
 
                 <div class="input-group"><label><input type="checkbox" id="showAnn" checked onchange="updateAnnexure()" style="width:auto"> Print annexure page (photo + ID proofs)</label></div>
 
-                <h3>6. Extra terms, sections or fields</h3>
-                <p class="hint" style="margin:0 0 6px">Add any extra clause or detail you need. With a heading and details it prints as a numbered point. With only a heading it prints as a section heading.</p>
-                <div id="xf"></div>
-                <button type="button" class="btn alt" id="addx" onclick="addExtra()"><i class="fa-solid fa-plus"></i> Add Field</button>
-
-                <button class="btn-print" onclick="CSC.printPage('Rent_Agreement')"><i class="fa-solid fa-print"></i> Print / Save Agreement as PDF</button>
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / Save Agreement as PDF</button>
             </div>
 
             <!-- Right Preview Panel -->
@@ -338,7 +333,6 @@
                             <li>That electricity and water charges shall be paid extra by the Second Party as per actual meter readings.</li>
                             <li>That the Second Party shall not make any structural alterations to the premises without written consent from the First Party.</li>
                         </ol>
-                        <div id="prevExtra" style="margin:4px 0 0 20px"></div>
                     </div>
 
                     <div class="doc-section" style="margin-top: 30px;">
@@ -391,14 +385,6 @@
             g('annName').innerText=g('p2Name').value;
             [1,2].forEach(n=>{g('idCap'+n).innerText='ID proof '+n+': '+g('idType'+n).value+(g('idNo'+n).value?' - '+g('idNo'+n).value:'');});
         }
-        const XR=[];
-        function addExtra(){XR.push({t:'',v:''});drawExtraForm();}
-        function drawExtraForm(){const h=document.getElementById('xf');h.innerHTML='';XR.forEach((r,i)=>{const d=document.createElement('div');d.className='xf-row';
-            d.innerHTML='<input type="text" placeholder="Heading / field name" aria-label="Heading"><textarea rows="2" placeholder="Details (leave empty for a section heading)" aria-label="Details"></textarea><button type="button" aria-label="Remove">&#10005;</button>';
-            const a=d.children[0],b=d.children[1];a.value=r.t;b.value=r.v;a.oninput=()=>{r.t=a.value;updateAgreement();};b.oninput=()=>{r.v=b.value;updateAgreement();};
-            d.children[2].onclick=()=>{XR.splice(i,1);drawExtraForm();updateAgreement();};h.appendChild(d);});}
-        function drawExtraPrev(){const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let n=5;
-            document.getElementById('prevExtra').innerHTML=XR.filter(r=>r.t.trim()||r.v.trim()).map(r=>r.v.trim()?'<div style="margin:4px 0">'+(++n)+'. '+(r.t.trim()?'<strong>'+esc(r.t.trim())+':</strong> ':'')+esc(r.v.trim()).replace(/\n/g,'<br>')+'</div>':'<div style="margin:8px 0 2px"><strong>'+esc(r.t.trim())+'</strong></div>').join('');}
         function updateAgreement() {
             const type = document.getElementById('agreementType').value;
             document.getElementById('prevDocTitle').innerText = type === 'rent' ? 'RENT AGREEMENT' : 'SERVICE AGREEMENT';
@@ -432,7 +418,6 @@
 
             document.getElementById('prevSigP1').innerText = p1Name;
             document.getElementById('prevSigP2').innerText = p2Name;
-            drawExtraPrev();
             updateAnnexure();
         }
 

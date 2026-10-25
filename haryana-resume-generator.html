@@ -233,7 +233,7 @@ function draw(){var d=D,P=$("paper"),ly=LK[$("lay").selectedIndex];
  else h='<div class="hd"><div>'+head+"</div>"+ph+"</div>"+obj+edu+exp+sk+sk2+st+lg+hb+pers+ach+ref+dc;
  P.innerHTML=h;
  $("fnh").textContent=L("The 📄 Save as PDF button downloads a PDF file directly. File name: |📄 PDF सेव करें बटन सीधे PDF फ़ाइल डाउनलोड करता है। फ़ाइल नाम: ")+fname()+".pdf. "+L("Print button: if the print window does not open, press Ctrl+P or open the downloaded file in Chrome.|प्रिंट बटन: यदि प्रिंट विंडो न खुले तो Ctrl+P दबाएँ या डाउनलोड की हुई फ़ाइल को Chrome में खोलें।")}
-function fname(){return"CSC_VLE_TOOLS_Resume_"+((D&&D.name)||"Applicant").replace(/[^A-Za-z0-9\u0900-\u097F]+/g,"_").replace(/^_+|_+$/g,"")+"_"+new Date().toISOString().slice(0,10)}
+function fname(){return"Resume_"+((D&&D.name)||"Applicant").replace(/[^A-Za-z0-9\u0900-\u097F]+/g,"_").replace(/^_+|_+$/g,"")+"_"+new Date().toISOString().slice(0,10)}
 function note(m){var t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(note.t);note.t=setTimeout(function(){t.style.display="none"},7000)}
 function ok(){note(L("Layout changed – your manual edits were reset.|लेआउट बदल गया – आपके हाथ से किए बदलाव हट गए।"));return true}
 var T0=document.title;window.addEventListener("afterprint",function(){document.title=T0});

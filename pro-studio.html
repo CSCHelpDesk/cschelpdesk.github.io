@@ -2056,7 +2056,7 @@ function downloadCanvasPNG(id,filename,transparent=false){
   }
 
   const a=document.createElement("a");
-  a.download=(/^CSC_VLE_TOOLS/i.test(filename)?filename:'CSC_VLE_TOOLS_'+filename);
+  a.download=filename;
   a.href=out.toDataURL("image/png");
   document.body.appendChild(a);
   a.click();
